@@ -12,8 +12,8 @@ import { ConnectedRouter, routerMiddleware } from "react-router-redux"
 import "./index.css"
 import App from "./App"
 import registerServiceWorker from "./registerServiceWorker"
-import { configureEpics } from "./configureEpics"
-import { rootReducer } from "./rootReducer"
+import { configureEpics } from "./utils/configureEpics"
+import { appReducer } from "./reducers/app"
 
 
 const initialState = {}
@@ -21,7 +21,7 @@ const deps = {}
 const history = createHistory()
 
 const store = createStore(
-    rootReducer,
+    appReducer,
     initialState,
     composeWithDevTools(applyMiddleware(
         createEpicMiddleware(configureEpics(deps)),

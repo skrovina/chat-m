@@ -3,11 +3,22 @@
 import React from "react"
 import { connect } from "react-redux"
 import { withRouter } from "react-router-dom"
-import { Content } from "./content/Content"
+import { Content } from "./components/Content"
+import { logIn } from "./api/httpRequests"
+import { getHttpHeaders } from "./selectors/httpHeaders"
+import type { StateObject } from "./reducers/app"
 
+type AppProps = {|
+    +state: StateObject,
+|}
 
-class App extends React.Component {
+class App extends React.Component<*, *> {
+    props: AppProps
+
     render() {
+        logIn("mato@figurepos.com", getHttpHeaders(this.props.state))
+            .then((auth) => console.log(auth))
+
         return (
             <div>
                 <Content />
@@ -16,7 +27,7 @@ class App extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({ state: state })
 
 const mapDispatchToProps = {}
 
