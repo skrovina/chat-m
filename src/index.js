@@ -10,13 +10,22 @@ import createHistory from "history/createBrowserHistory"
 import { ConnectedRouter, routerMiddleware } from "react-router-redux"
 
 import "./index.css"
-import App from "./App"
+import App from "./components/App"
 import registerServiceWorker from "./registerServiceWorker"
 import { configureEpics } from "./utils/configureEpics"
 import { appReducer } from "./reducers/app"
 
 
-const initialState = {}
+const initialState = {
+    auth: (// let
+        (stringified = localStorage.getItem("auth")) =>
+            // in
+            (stringified
+                ? JSON.parse(stringified)
+                : null)
+    )(),
+}
+
 const deps = {}
 const history = createHistory()
 
@@ -27,7 +36,7 @@ const store = createStore(
         createEpicMiddleware(configureEpics(deps)),
         routerMiddleware(history),
         createLogger({ collapsed: true, diff: true }),
-    ))
+    )),
 )
 
 const root = (

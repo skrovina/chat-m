@@ -2,6 +2,8 @@
 
 import { combineReducers } from "redux"
 import { routerReducer } from "react-router-redux"
+import { reducer as formReducer } from "redux-form"
+
 import { authReducer } from "./auth"
 import { usersReducer } from "./users"
 import { channelsReducer } from "./channels"
@@ -14,6 +16,7 @@ import type { ActiveChannelStateObject } from "./activeChannel"
 
 export type StateObject = {|
     routing: Object,
+    form: Object,
     auth: ?Auth,
     users: UsersStateObject,
     channels: ChannelsStateObject,
@@ -22,6 +25,7 @@ export type StateObject = {|
 
 export const appReducer = combineReducers({
     routing: routerReducer,
+    form: formReducer,
     auth: authReducer,
     users: usersReducer,
     channels: channelsReducer,

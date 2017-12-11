@@ -20,7 +20,10 @@ export const createHttpRequest = (data: HttpRequestType): Promise<any> => {
     }
 
     if (logHttpRequests) {
-        console.log(`URL: ${data.url}\nMETHOD: ${options.method}\nHEADERS: ${options.headers}\nBODY: ${options.body}`)
+        console.log(`URL: ${data.url}\n`
+            + `METHOD: ${options.method}\n`
+            + `HEADERS: ${JSON.stringify(options.headers, null, 2)}\n`
+            + `BODY: ${JSON.stringify(options.body, null, 2)}`)
     }
 
     const { url } = data
