@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react"
-import { ControlLabel, FormGroup, FormControl, HelpBlock } from "react-bootstrap"
+import { Form } from "antd"
 //import type { FieldProps } from "redux-form"
 
 
@@ -12,12 +12,14 @@ export const formRenderer = (render: *) => (props: LabelFieldProps) =>
     (({ input, meta, label }: LabelFieldProps = props,
       error = meta.error,
       touched = meta.touched,
-      showError: boolean = touched && error) => (
+      showError: boolean = touched && error,
+      showSuccess: boolean = touched && !error,) => (
         // in
-        <FormGroup validationState={showError ? "error" : null}>
-            <ControlLabel>{label}</ControlLabel>
+        <Form.Item
+            label={label}
+            validateStatus={showError ? "error" : (showSuccess ? "success" : null)}
+            hasFeedback={showError || showSuccess}
+            help={showError ? error : null}>
             {render(props)}
-            <FormControl.Feedback />
-            {showError && <HelpBlock>{error}</HelpBlock>}
-        </FormGroup>
+        </Form.Item>
     ))()

@@ -1,11 +1,11 @@
 // @flow
 
-import { Logger } from "../utils/Logger"
+import { Logger } from "../utils/logger"
 
 const logHttpRequests = true
 
 type HttpRequestType = {|
-    method: string,
+    method: "GET" | "POST" | "DELETE" | "PATCH" | "PUT",
     url: string,
     headers: Object,
     body?: any,

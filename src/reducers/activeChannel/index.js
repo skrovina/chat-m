@@ -8,7 +8,7 @@ import type { MessagesStateObject } from "./messages"
 
 
 export type ActiveChannelStateObject = {|
-    channelId: string,
+    channelId: ?string,
     messages: MessagesStateObject,
     newMessageText: string,
 |}

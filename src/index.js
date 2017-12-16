@@ -1,3 +1,5 @@
+import "antd/dist/antd.css"
+
 import React from "react"
 import ReactDOM from "react-dom"
 
@@ -25,6 +27,11 @@ const initialState = {
                 : null)
     )(),
 }
+
+//const initialState = {
+//}
+//
+//localStorage.removeItem("auth")
 
 const deps = {}
 const history = createHistory()

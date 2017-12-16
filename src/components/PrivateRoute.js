@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react"
-import { Redirect, Route } from "react-router-dom"
+import { Redirect, Route, withRouter } from "react-router-dom"
 import { connect } from "react-redux"
 import { getAuth } from "../selectors/auth"
 
@@ -28,4 +28,4 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {}
 
-export const PrivateRoute = connect(mapStateToProps, mapDispatchToProps)(PrivateRouteC)
+export const PrivateRoute = withRouter(connect(mapStateToProps, mapDispatchToProps)(PrivateRouteC))

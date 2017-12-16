@@ -6,6 +6,7 @@ import type { EpicDeps } from "../utils/configureEpics"
 import { createActionLoginAuthorized, LOGIN_AUTHORIZED, LOGIN_REQUESTED } from "../actions/login"
 import { logIn } from "../api/httpRequests"
 import { getHttpHeaders } from "../selectors/httpHeaders"
+import { createActionSyncStart } from "../actions/sync"
 
 
 const logInEpic = (action$: Object, deps: EpicDeps) =>
@@ -22,7 +23,7 @@ const logInEpic = (action$: Object, deps: EpicDeps) =>
         })
         .map(([token, email]) => createActionLoginAuthorized({ token: token, email: email }))
 
-const loginAuthorized = (action$: Object, deps: EpicDeps) =>
+const loginAuthorizedSaveAuth = (action$: Object, deps: EpicDeps) =>
     action$.ofType(LOGIN_AUTHORIZED)
         .switchMap((action) => {
             const { payload: { auth } } = action
@@ -31,7 +32,13 @@ const loginAuthorized = (action$: Object, deps: EpicDeps) =>
             return []
         })
 
+const loginAuthorizedDownloadData = (action$: Object, deps: EpicDeps) =>
+    action$.ofType(LOGIN_AUTHORIZED)
+        .map(() => createActionSyncStart())
+
+
 export default [
     logInEpic,
-    loginAuthorized,
+    loginAuthorizedSaveAuth,
+    loginAuthorizedDownloadData,
 ]

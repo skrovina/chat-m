@@ -11,7 +11,7 @@ type AppProps = {|
     onAppLoad: () => void,
 |}
 
-class App extends React.PureComponent<*, *> {
+class App extends React.Component<*, *> {
     props: AppProps
 
     componentWillMount() {
@@ -20,15 +20,12 @@ class App extends React.PureComponent<*, *> {
 
     render() {
         return (
-            <div>
-                <Content />
-            </div>
+            <Content />
         )
     }
 }
 
-const mapStateToProps = (state) => ({
-})
+const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = {
     onAppLoad: createActionAppLoaded,

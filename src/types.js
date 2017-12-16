@@ -5,13 +5,16 @@ export type Auth = {|
     email: string,
 |}
 
+export type ChannelParticipator = {|
+    email: string,
+    lastReadDate: ?string,
+|}
+
 export type User = {|
     email: string,
-
     name: string,
     // BASE64 encoded image
-    image: string,
-    channelIds: string[],
+    image: ?string,
 |}
 
 export type UserDTO = {|
@@ -22,8 +25,8 @@ export type UserDTO = {|
 export type Channel = {|
     id: string,
     name: string,
-
     creatorEmail: string,
+    participators: { [key: string]: ChannelParticipator },
 |}
 
 export type ChannelDTO = {|
@@ -32,14 +35,28 @@ export type ChannelDTO = {|
     customData: string,
 |}
 
+export type NewChannel = {|
+    name: string,
+    creatorEmail: string,
+    participators: { [key: string]: ChannelParticipator },
+|}
+
+export type NewChannelDTO = {|
+    name: string,
+    customData: string,
+|}
+
 export type Message = {|
     id: string,
     value: string,
-    createdAt: string,
-    createdBy: string,
-    updatedAt: string,
-    updatedBy: string,
-
+    created: {|
+        at: string,
+        by: string,
+    |},
+    updated: ?{|
+        at: string,
+        by: string,
+    |},
     upvoteCount: number,
 |}
 
