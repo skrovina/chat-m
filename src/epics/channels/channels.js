@@ -6,13 +6,20 @@ import type { EpicDeps } from "../../utils/configureEpics"
 import { CHANNELS_SELECT } from "../../actions/channels/channels"
 import { getChannelMessages } from "../../api/httpRequests"
 import { getHttpHeaders } from "../../selectors/httpHeaders"
-import { createActionChannelMessagesReceived } from "../../actions/messages"
+import {
+    CHANNEL_MESSAGES_SYNC, createActionChannelMessagesReceived,
+    createActionChannelMessagesSync,
+} from "../../actions/messages"
 import type { MessageDTO } from "../../types"
 import { messageDTOToMessage } from "../../modelTransform/message"
 
 
 const channelsSelect = (action$: Object, deps: EpicDeps) =>
     action$.ofType(CHANNELS_SELECT)
+        .map(({ payload: { channelId } }) => createActionChannelMessagesSync(channelId))
+
+const channelMessagesSync = (action$: Object, deps: EpicDeps) =>
+    action$.ofType(CHANNEL_MESSAGES_SYNC)
         .concatMap(({ payload: { channelId } }) =>
             Rx.Observable.from(getChannelMessages(
                 channelId,
@@ -32,4 +39,5 @@ const channelsSelect = (action$: Object, deps: EpicDeps) =>
 
 export default [
     channelsSelect,
+    channelMessagesSync,
 ]

@@ -35,6 +35,9 @@ const validate = (values: Object) => ({
     ...isEmailAddressValid(values.email) ? {} : { email: "Invalid email" },
 })
 
+const Title = styled.h1`
+    margin-bottom: 5rem;
+`
 
 type LoginCProps = {
     auth: Auth,
@@ -55,10 +58,9 @@ class LoginC extends React.Component<*> {
 
         return (
             <Container>
-                <h1>Log In</h1>
+                <Title>Log In</Title>
                 <Form onSubmit={this.props.handleSubmit(this.props.onLogin)}>
                     <Field name="email" label="E-mail" component={FormInput} />
-                    <Field name="name" label="Name" component={FormInput} />
                     <ButtonRow>
                         <Button
                             htmlType="submit"

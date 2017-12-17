@@ -30,6 +30,14 @@ export const createActionChannelMessagesReceived = (channelId: string, messages:
     },
 })
 
+export const CHANNEL_MESSAGES_SYNC = "channel/messages/sync"
+export const createActionChannelMessagesSync = (channelId: string) => ({
+    type: CHANNEL_MESSAGES_SYNC,
+    payload: {
+        channelId: channelId,
+    },
+})
+
 export const MESSAGE_SEARCH_TEXT_CHANGED = "messages/search/textChanged"
 export const createActionMessageSearchTextChanged = (text: string) => ({
     type: MESSAGE_SEARCH_TEXT_CHANGED,

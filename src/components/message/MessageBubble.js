@@ -85,7 +85,7 @@ export class MessageBubble extends React.Component<*> {
         const { creator, message } = this.props
         const name = creator && creator.name
         const title = name || "Anonymous User"
-        const avatar = creator.image
+        const avatar = creator && creator.image
         const createdAt = formatDateTime(message.created.at)
 
         return (

@@ -28,11 +28,6 @@ const initialState = {
     )(),
 }
 
-//const initialState = {
-//}
-//
-//localStorage.removeItem("auth")
-
 const deps = {}
 const history = createHistory()
 

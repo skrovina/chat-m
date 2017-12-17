@@ -9,20 +9,22 @@ import type { Channel, ChannelDTO, User, UserDTO } from "../types"
 import { createActionUsersSync } from "../actions/users"
 import { userDTOToUser } from "../modelTransform/user"
 import { toAssoc } from "../utils/collections"
-import { createActionChannelsSync } from "../actions/channels/channels"
+import { CHANNELS_SYNC, createActionChannelsSync } from "../actions/channels/channels"
 import { channelDTOToChannel } from "../modelTransform/channel"
 import { APP_LOADED } from "../actions/app"
 import { createActionLogOut } from "../actions/logout"
+import { getUserChannels } from "../selectors/channels"
+import { createActionChannelMessagesSync } from "../actions/messages"
 
 
 const syncStart = (action$: Object, deps: EpicDeps) =>
     action$.ofType(APP_LOADED)
-    // .switchMap(() => Rx.Observable.interval(5000))
         .map(() => createActionSyncStart())
 
 const syncFire = (action$: Object, deps: EpicDeps) =>
     action$.ofType(SYNC_START)
-        // .switchMap(() => Rx.Observable.interval(5000))
+        // Synchronize every 10 seconds
+        .switchMap(() => Rx.Observable.timer(0, 10000))
         .map(() => createActionSyncFire())
 
 const syncUsers = (action$: Object, deps: EpicDeps) =>
@@ -59,10 +61,19 @@ const syncChannels = (action$: Object, deps: EpicDeps) =>
             return [createActionLogOut()]
         })
 
+const syncMessages = (action$: Object, deps: EpicDeps) =>
+    action$.ofType(CHANNELS_SYNC)
+        .switchMap(() => {
+            const channels: Channel[] = getUserChannels(deps.getState())
+
+            return channels.map(channel => createActionChannelMessagesSync(channel.id))
+        })
+
 
 export default [
     syncStart,
     syncFire,
     syncUsers,
     syncChannels,
+    syncMessages,
 ]
