@@ -4,17 +4,19 @@ import React from "react"
 import { connect } from "react-redux"
 import { Field, reduxForm } from "redux-form"
 import { Button, Form, Modal } from "antd"
-import { push } from "react-router-redux"
-import styled from "styled-components"
 import { FormInput } from "./forms/FormInput"
-import { Link, withRouter } from "react-router-dom"
-import { createActionModalDismiss, createActionAddChannelSubmit } from "../actions/channels/addChannel"
+import { createActionModalDismiss } from "../actions/channels/addChannel"
+import { createActionRenameChannelSubmit } from "../actions/channels/channels"
+import { getActiveChannel } from "../selectors/channels"
 
-class AddChannelC extends React.Component<*> {
+
+class RenameChannelC extends React.Component<*> {
+    props: *
+
     render() {
         return (
             <Modal
-                title="Add New Channel"
+                title="Rename Channel"
                 visible={true}
                 onCancel={this.props.onCancel}
                 footer={[
@@ -30,21 +32,28 @@ class AddChannelC extends React.Component<*> {
                     </Button>,
                 ]}>
                 <Form>
-                    <Field name="name" label="Name" component={FormInput} />
+                    <Field
+                        name="name"
+                        label="New Name"
+                        placeholder={this.props.channel ? this.props.channel.name : ""}
+                        onPressEnter={this.props.handleSubmit(this.props.onSubmit)}
+                        component={FormInput} />
                 </Form>
             </Modal>
         )
     }
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+    channel: getActiveChannel(state),
+})
 
 const mapDispatchToProps = {
-    onSubmit: createActionAddChannelSubmit,
+    onSubmit: createActionRenameChannelSubmit,
     onCancel: createActionModalDismiss,
 }
 
-export const AddChannel = reduxForm({
-    form: "add-channel",
+export const RenameChannel = reduxForm({
+    form: "rename-channel",
     destroyOnUnmount: true,
-})(connect(mapStateToProps, mapDispatchToProps)(AddChannelC))
+})(connect(mapStateToProps, mapDispatchToProps)(RenameChannelC))

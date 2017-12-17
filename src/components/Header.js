@@ -4,12 +4,13 @@
 import styled from "styled-components"
 
 export const Header = styled.div`
-    background: papayawhip;
-    height: 4em;
+    background: whitesmoke;
+    height: 6rem;
+    min-height: 6rem;
     display: flex;
     justify-content: space-between;
     flex-wrap: nowrap;
     align-items: center;
-    padding: 1em;
+    padding: 2rem;
     border-bottom: 1px solid lightgrey;
 `

@@ -2,7 +2,7 @@
 
 import { createHttpRequest } from "./createHttpRequest"
 import { Config } from "../utils/config"
-import type { Channel, ChannelDTO, MessageDTO, NewChannel, NewChannelDTO, UserDTO } from "../types"
+import type { Channel, ChannelDTO, MessageDTO, NewChannel, NewChannelDTO, UserDTO, UserUpdateDTO } from "../types"
 
 
 const baseUrl: string = Config.SERVER_URL
@@ -38,12 +38,12 @@ export const getUser = (email: string, headers: Object): Promise<UserDTO> =>
         headers: headers,
     })
 
-export const updateUser = (user: UserDTO, headers: Object): Promise<UserDTO> =>
+export const updateUser = (email: string, userUpdate: UserUpdateDTO, headers: Object): Promise<UserDTO> =>
     createHttpRequest({
         method: "PUT",
-        url: `${baseUrl}/${appId}/user/${user.email}`,
+        url: `${baseUrl}/${appId}/user/${email}`,
         headers: headers,
-        body: user,
+        body: userUpdate,
     })
 
 export const getChannels = (headers: Object): Promise<[ChannelDTO]> =>
@@ -73,7 +73,6 @@ export const deleteChannel = (channel: ChannelDTO, headers: Object): Promise<[Ch
         body: [{
             op: "remove",
             path: `/channels/${channel.id}`,
-            value: channel,
         }],
     }).then((response: { id: string, channels: [ChannelDTO] }) => response.channels)
 
@@ -116,4 +115,5 @@ export const updateChannelMessage = (channelId: string, message: MessageDTO, hea
         method: "PUT",
         url: `${baseUrl}/app/${appId}/channel/${channelId}/message/${message.id}`,
         headers: headers,
+        body: message,
     })

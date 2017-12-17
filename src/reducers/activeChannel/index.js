@@ -1,20 +1,20 @@
 // @flow
 
 import { combineReducers } from "redux"
-import { messagesReducer } from "./messages"
 import { newMessageTextReducer } from "./newMessageText"
 import { channelIdReducer } from "./channelId"
-import type { MessagesStateObject } from "./messages"
+import { messageSearchReducer } from "./messageSearch"
 
 
 export type ActiveChannelStateObject = {|
     channelId: ?string,
-    messages: MessagesStateObject,
     newMessageText: string,
+    searchText: string,
+    messageSearchText: string,
 |}
 
 export const activeChannelReducer = combineReducers({
     channelId: channelIdReducer,
-    messages: messagesReducer,
     newMessageText: newMessageTextReducer,
+    messageSearchText: messageSearchReducer,
 })

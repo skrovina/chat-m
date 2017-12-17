@@ -22,6 +22,8 @@ export type UserDTO = {|
     customData: string,
 |}
 
+export type UserUpdateDTO = string
+
 export type Channel = {|
     id: string,
     name: string,

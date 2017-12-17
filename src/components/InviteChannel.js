@@ -4,17 +4,16 @@ import React from "react"
 import { connect } from "react-redux"
 import { Field, reduxForm } from "redux-form"
 import { Button, Form, Modal } from "antd"
-import { push } from "react-router-redux"
-import styled from "styled-components"
 import { FormInput } from "./forms/FormInput"
-import { Link, withRouter } from "react-router-dom"
-import { createActionModalDismiss, createActionAddChannelSubmit } from "../actions/channels/addChannel"
+import { createActionModalDismiss } from "../actions/channels/addChannel"
+import { createActionInviteChannelSubmit } from "../actions/channels/channels"
 
-class AddChannelC extends React.Component<*> {
+
+class InviteChannelC extends React.Component<*> {
     render() {
         return (
             <Modal
-                title="Add New Channel"
+                title="Invite People To Channel"
                 visible={true}
                 onCancel={this.props.onCancel}
                 footer={[
@@ -30,7 +29,11 @@ class AddChannelC extends React.Component<*> {
                     </Button>,
                 ]}>
                 <Form>
-                    <Field name="name" label="Name" component={FormInput} />
+                    <Field
+                        name="email"
+                        label="Email"
+                        component={FormInput}
+                        onPressEnter={this.props.handleSubmit(this.props.onSubmit)} />
                 </Form>
             </Modal>
         )
@@ -40,11 +43,11 @@ class AddChannelC extends React.Component<*> {
 const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = {
-    onSubmit: createActionAddChannelSubmit,
+    onSubmit: createActionInviteChannelSubmit,
     onCancel: createActionModalDismiss,
 }
 
-export const AddChannel = reduxForm({
-    form: "add-channel",
+export const InviteChannel = reduxForm({
+    form: "invite-channel",
     destroyOnUnmount: true,
-})(connect(mapStateToProps, mapDispatchToProps)(AddChannelC))
+})(connect(mapStateToProps, mapDispatchToProps)(InviteChannelC))

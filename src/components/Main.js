@@ -2,32 +2,34 @@
 
 import React from "react"
 import { connect } from "react-redux"
-import { List } from "antd"
 import styled from "styled-components"
-import { Button, Col, FormControl, Grid, Row } from "react-bootstrap"
+import { Route } from "react-router-dom"
 import { ChannelHeader } from "./ChannelHeader"
 import { ChannelsHeader } from "./ChannelsHeader"
-import { Route, withRouter } from "react-router-dom"
 import { AddChannel } from "./AddChannel"
 import { ChannelList } from "./ChannelList"
+import { MessageList } from "./MessageList"
+import { MessageComposer } from "./MessageComposer"
+import { InviteChannel } from "./InviteChannel"
+import { DeleteChannel } from "./DeleteChannel"
+import { RenameChannel } from "./RenameChannel"
+import { EditProfile } from "./EditProfile"
 
 
 const LeftCol = styled.div`
+    border-right: 1px solid lightgrey;
     display: flex;
     flex: 1;
     justify-content: stretch;
     flex-direction: column;
     align-items: stretch;
-    overflow: scroll;
 `
 const RightCol = styled.div`
     display: flex;
     flex: 2;
     justify-content: stretch;
-    border-left: 1px solid lightgrey;
     flex-direction: column;
     align-items: stretch;
-    overflow: scroll;
 `
 
 const Flex = styled.div`
@@ -38,23 +40,29 @@ const Flex = styled.div`
     height: 100%;
     min-height: 100%;
 `
-
-const Profile = styled.div`
-    display: flex;
-    height: 5em;
+const ProfileContainer = styled.div`
+    height: 20rem;
     background-color: papayawhip;
 `
 
-const MessageList = styled.div`
+const MessageListContainer = styled.div`
     display: flex;
     flex-direction: column;
-    background-color: red;
     flex: auto;
+    overflow: scroll;
 `
 
 const ModalContainer = styled.div`
     min-height: 100%;
     height: 100%;
+`
+
+const ChannelListScroller = styled.div`
+    display: flex;
+    flex: auto;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: scroll;
 `
 
 type MainProps = {} & { match: * }
@@ -68,15 +76,23 @@ export class MainC extends React.Component<*, *> {
                 <Flex>
                     <LeftCol>
                         <ChannelsHeader />
-                        <ChannelList/>
-                        <Profile />
+                        <ChannelListScroller>
+                            <ChannelList />
+                        </ChannelListScroller>
                     </LeftCol>
                     <RightCol>
                         <ChannelHeader />
-                        <MessageList />
+                        <MessageListContainer>
+                            <MessageList />
+                        </MessageListContainer>
+                        <MessageComposer />
                     </RightCol>
                 </Flex>
                 <Route path={`${this.props.match.url}/add-channel`} component={AddChannel}/>
+                <Route path={`${this.props.match.url}/invite-channel`} component={InviteChannel}/>
+                <Route path={`${this.props.match.url}/delete-channel`} component={DeleteChannel}/>
+                <Route path={`${this.props.match.url}/rename-channel`} component={RenameChannel}/>
+                <Route path={`${this.props.match.url}/edit-profile`} component={EditProfile}/>
             </ModalContainer>
         )
     }

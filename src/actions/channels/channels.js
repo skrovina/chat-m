@@ -1,7 +1,7 @@
 // @flow
 
 import { push } from "react-router-redux"
-import type { Channel } from "../../types"
+import type { Channel, ChannelDTO, NewChannel } from "../../types"
 
 export const CHANNELS_SYNC = "channels/sync"
 export const createActionChannelsSync = (channels: { [key: string]: Channel }) => ({
@@ -27,5 +27,69 @@ export const createActionChannelsSelect = (channelId: string) => ({
     type: CHANNELS_SELECT,
     payload: {
         channelId: channelId,
+    },
+})
+
+export const INVITE_CHANNEL_SUBMIT = "inviteChannel/submit"
+export const createActionInviteChannelSubmit = () => ({
+    type: INVITE_CHANNEL_SUBMIT,
+})
+
+export const INVITE_CHANNEL_POST = "inviteChannel/post"
+export const createActionInviteChannelPost = (channel: Channel) => ({
+    type: INVITE_CHANNEL_POST,
+    payload: {
+        channel: channel,
+    },
+})
+
+export const INVITE_CHANNEL_POST_SUCCESS = "inviteChannel/post/success"
+export const createActionInviteChannelPostSuccess = (channels: ChannelDTO[]) => ({
+    type: INVITE_CHANNEL_POST_SUCCESS,
+    payload: {
+        channels: channels,
+    },
+})
+
+
+export const DELETE_CHANNEL_SUBMIT = "deleteChannel/submit"
+export const createActionDeleteChannelSubmit = () => ({
+    type: DELETE_CHANNEL_SUBMIT,
+})
+
+export const DELETE_CHANNEL_POST = "deleteChannel/post"
+export const createActionDeleteChannelPost = (channel: Channel) => ({
+    type: DELETE_CHANNEL_POST,
+    payload: {
+        channel: channel,
+    },
+})
+
+export const DELETE_CHANNEL_POST_SUCCESS = "deleteChannel/post/success"
+export const createActionDeleteChannelPostSuccess = (channels: ChannelDTO[]) => ({
+    type: DELETE_CHANNEL_POST_SUCCESS,
+    payload: {
+        channels: channels,
+    },
+})
+
+export const RENAME_CHANNEL_SUBMIT = "renameChannel/submit"
+export const createActionRenameChannelSubmit = () => ({
+    type: RENAME_CHANNEL_SUBMIT,
+})
+
+export const RENAME_CHANNEL_POST = "renameChannel/post"
+export const createActionRenameChannelPost = (channel: Channel) => ({
+    type: RENAME_CHANNEL_POST,
+    payload: {
+        channel: channel,
+    },
+})
+
+export const RENAME_CHANNEL_POST_SUCCESS = "renameChannel/post/success"
+export const createActionRenameChannelPostSuccess = (channels: ChannelDTO[]) => ({
+    type: RENAME_CHANNEL_POST_SUCCESS,
+    payload: {
+        channels: channels,
     },
 })

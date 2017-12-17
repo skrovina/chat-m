@@ -3,8 +3,7 @@
 import { push } from "react-router-redux"
 import type { ChannelDTO, NewChannel } from "../../types"
 
-export const ADD_CHANNEL_DISMISS = "addChannel/dismiss"
-export const createActionAddChannelDismiss = () => push("/app")
+export const createActionModalDismiss = () => push("/app")
 
 export const ADD_CHANNEL_SUBMIT = "addChannel/submit"
 export const createActionAddChannelSubmit = () => ({

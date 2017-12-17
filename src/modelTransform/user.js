@@ -1,6 +1,6 @@
 // @flow
 
-import type { User, UserDTO } from "../types"
+import type { User, UserDTO, UserUpdateDTO } from "../types"
 import { decodeCustomData, encodeCustomData } from "./coder"
 
 export const userToUserDTO = ({ email, ...rest }: User): UserDTO => ({
@@ -18,3 +18,5 @@ export const userDTOToUser = ({ email, customData }: UserDTO): User =>
             image: image,
         })
     )()
+
+export const userDTOToUserUpdateDTO = ({ email, customData }: UserDTO): UserUpdateDTO => customData

@@ -7,9 +7,11 @@ import { Header } from "./Header"
 import { getUserChannelsSorted } from "../selectors/channels"
 import type { Channel } from "../types"
 import { createActionChannelsSelect } from "../actions/channels/channels"
+import { getActiveChannelId } from "../selectors/activeChannelx"
 
 type ChannelListProps = {|
     channels: Channel[],
+    activeChannelId: ?string,
     onClick: (string) => void,
 |}
 
@@ -20,7 +22,11 @@ class ChannelListC extends React.Component<*> {
 
     render() {
         return (
-            <Menu onClick={this.onClick}>
+            <Menu
+                selectedKeys={this.props.activeChannelId
+                    ? [this.props.activeChannelId]
+                    : []}
+                onClick={this.onClick}>
                 {this.props.channels.map((channel) => (
                     <Menu.Item key={channel.id}>
                         {channel.name}
@@ -34,6 +40,7 @@ class ChannelListC extends React.Component<*> {
 
 const mapStateToProps = (state) => ({
     channels: getUserChannelsSorted(state),
+    activeChannelId: getActiveChannelId(state),
 })
 
 const mapDispatchToProps = {

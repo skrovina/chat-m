@@ -18,7 +18,7 @@ export const formRenderer = (render: *) => (props: LabelFieldProps) =>
         <Form.Item
             label={label}
             validateStatus={showError ? "error" : (showSuccess ? "success" : null)}
-            hasFeedback={showError || showSuccess}
+            hasFeedback={Boolean(showError || showSuccess)}
             help={showError ? error : null}>
             {render(props)}
         </Form.Item>

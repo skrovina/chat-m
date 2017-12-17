@@ -4,52 +4,58 @@ import Rx from "rxjs"
 import { getFormValues } from "redux-form"
 import type { EpicDeps } from "../../utils/configureEpics"
 import {
-    ADD_CHANNEL_POST, ADD_CHANNEL_POST_SUCCESS, ADD_CHANNEL_SUBMIT, createActionModalDismiss,
-    createActionAddChannelPost, createActionAddChannelPostFailure, createActionAddChannelPostSuccess,
+    createActionModalDismiss,
 } from "../../actions/channels/addChannel"
-import { createActionChannelsSync } from "../../actions/channels/channels"
-import { createNewChannel } from "../../entityCreators/channel"
+import {
+    createActionChannelsSync,
+    createActionRenameChannelPost, createActionRenameChannelPostSuccess,
+    RENAME_CHANNEL_POST,
+    RENAME_CHANNEL_POST_SUCCESS,
+    RENAME_CHANNEL_SUBMIT,
+} from "../../actions/channels/channels"
 import { getHttpHeaders } from "../../selectors/httpHeaders"
 import { getSignedInUserEmail } from "../../selectors/users"
-import { addChannel } from "../../api/httpRequests"
-import type { Channel, ChannelDTO, NewChannel } from "../../types"
-import { channelDTOToChannel, newChannelToNewChannelDTO } from "../../modelTransform/channel"
+import { updateChannel } from "../../api/httpRequests"
+import type { Channel, ChannelDTO } from "../../types"
+import { channelDTOToChannel, channelToChannelDTO } from "../../modelTransform/channel"
 import { toAssoc } from "../../utils/collections"
+import { getActiveChannel } from "../../selectors/channels"
+import { renameChannel } from "../../entityFunctions/entityFunctions"
 
 
 const submit = (action$: Object, deps: EpicDeps) =>
-    action$.ofType(ADD_CHANNEL_SUBMIT)
+    action$.ofType(RENAME_CHANNEL_SUBMIT)
         .map(() => {
-            const { name } = getFormValues("add-channel")(deps.getState())
+            const { name } = getFormValues("rename-channel")(deps.getState())
             if (!name) {
                 throw new Error("Cannot get name from form")
             }
-            const email = getSignedInUserEmail(deps.getState())
-            if (!email) {
-                throw new Error("No user is signed in!")
+            const channel: ?Channel = getActiveChannel(deps.getState())
+            if (!channel) {
+                throw new Error("No active channel!")
             }
 
-            return createActionAddChannelPost(createNewChannel(name, email))
+            return createActionRenameChannelPost(renameChannel(channel, name))
         })
 
 const post = (action$: Object, deps: EpicDeps) =>
-    action$.ofType(ADD_CHANNEL_POST)
+    action$.ofType(RENAME_CHANNEL_POST)
         .concatMap((action) => {
             const headers = getHttpHeaders(deps.getState())
-            const newChannel: NewChannel = action.payload.newChannel
-            const newChannelDTO = newChannelToNewChannelDTO(newChannel)
+            const channel: Channel = action.payload.channel
+            const channelDTO = channelToChannelDTO(channel)
 
-            return Rx.Observable.from(addChannel(newChannelDTO, headers))
+            return Rx.Observable.from(updateChannel(channelDTO, headers))
         })
         .map((channels: ChannelDTO[]) =>
-            createActionAddChannelPostSuccess(channels))
+            createActionRenameChannelPostSuccess(channels))
         .catch((e) => {
             console.log(e)
-            return createActionAddChannelPostFailure(e)
+            return []
         })
 
 const postSuccessSync = (action$: Object, deps: EpicDeps) =>
-    action$.ofType(ADD_CHANNEL_POST_SUCCESS)
+    action$.ofType(RENAME_CHANNEL_POST_SUCCESS)
         .map((action) => {
             const channels: ChannelDTO[] = action.payload.channels
 
@@ -60,7 +66,7 @@ const postSuccessSync = (action$: Object, deps: EpicDeps) =>
         })
 
 const postSuccessCloseModal = (action$: Object, deps: EpicDeps) =>
-    action$.ofType(ADD_CHANNEL_POST_SUCCESS)
+    action$.ofType(RENAME_CHANNEL_POST_SUCCESS)
         .map((action) => createActionModalDismiss())
 
 
