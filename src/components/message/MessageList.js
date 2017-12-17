@@ -3,15 +3,15 @@
 import React from "react"
 import { connect } from "react-redux"
 import { List } from "antd"
-import type { Channel, Message } from "../types"
-import { createActionChannelsSelect } from "../actions/channels/channels"
-import { getAllUsers, getSignedInUserEmail } from "../selectors/users"
-import { getActiveChannelMessagesSortedFiltered } from "../selectors/channelMessages"
-import type { UsersStateObject } from "../reducers/users"
+import type { Channel, Message } from "../../types"
+import { createActionChannelsSelect } from "../../actions/channels/channels"
+import { getAllUsers, getSignedInUserEmail } from "../../selectors/users"
+import { getActiveChannelMessagesSortedFiltered } from "../../selectors/channelMessages"
+import type { UsersStateObject } from "../../reducers/users"
 import {
     createActionGotoMessageEdit, createActionMessageDownvote,
     createActionMessageUpvote,
-} from "../actions/messages"
+} from "../../actions/messages"
 import { MessageBubble } from "./MessageBubble"
 
 

@@ -1,12 +1,12 @@
 // @flow
 
 import React from "react"
+import { Link } from "react-router-dom"
 import { connect } from "react-redux"
 import { Button, Dropdown, Menu } from "antd"
-import { Header } from "./Header"
-import { createActionGoToChannelsAdd } from "../actions/channels/channels"
-import { Link } from "react-router-dom"
-import { createActionLogOut } from "../actions/logout"
+import { Header } from "../Header"
+import { createActionGoToChannelsAdd } from "../../actions/channels/channels"
+import { createActionLogOut } from "../../actions/logout"
 
 type ChannelsHeaderProps = {|
     addChannel: () => void,

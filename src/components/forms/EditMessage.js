@@ -4,11 +4,11 @@ import React from "react"
 import { connect } from "react-redux"
 import { Field, reduxForm } from "redux-form"
 import { Button, Form, Modal } from "antd"
-import { createActionModalDismiss } from "../actions/channels/addChannel"
-import { getSignedUser } from "../selectors/users"
-import { FormInput } from "./forms/FormInput"
-import { createActioEditMessageSubmit, createActionDeleteMessageSubmit } from "../actions/messages"
-import { getChannelMessageById } from "../selectors/channelMessages"
+import { createActionModalDismiss } from "../../actions/channels/addChannel"
+import { getSignedUser } from "../../selectors/users"
+import { FormInput } from "./FormInput"
+import { createActioEditMessageSubmit, createActionDeleteMessageSubmit } from "../../actions/messages"
+import { getChannelMessageById } from "../../selectors/channelMessages"
 
 
 export const editMessageComponent = (messageId: string) => {

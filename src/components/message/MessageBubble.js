@@ -3,8 +3,8 @@
 import React from "react"
 import { Icon, Avatar } from "antd"
 import styled from "styled-components"
-import type { Message, User } from "../types"
-import { formatDateTime } from "../utils/formatters"
+import type { Message, User } from "../../types"
+import { formatDateTime } from "../../utils/formatters"
 
 
 const StyledMsg = styled.div`

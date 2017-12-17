@@ -19,7 +19,7 @@ import type { Channel, ChannelDTO } from "../../types"
 import { channelDTOToChannel, channelToChannelDTO } from "../../modelTransform/channel"
 import { toAssoc } from "../../utils/collections"
 import { getActiveChannel } from "../../selectors/channels"
-import { renameChannel } from "../../entityFunctions/entityFunctions"
+import { renameChannel } from "../../utils/entityFunctions"
 
 
 const submit = (action$: Object, deps: EpicDeps) =>

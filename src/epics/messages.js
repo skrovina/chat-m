@@ -20,7 +20,7 @@ import type { EpicDeps } from "../utils/configureEpics"
 import { getHttpHeaders } from "../selectors/httpHeaders"
 import type { Message, MessageDTO } from "../types"
 import { getChannelMessageById } from "../selectors/channelMessages"
-import { adjustMessageVotes, updateMessageValue } from "../entityFunctions/entityFunctions"
+import { adjustMessageVotes, updateMessageValue } from "../utils/entityFunctions"
 import { createActionModalDismiss } from "../actions/channels/addChannel"
 
 
@@ -42,8 +42,6 @@ const sendMessage = (action$: Object, deps: EpicDeps) =>
                 .map(m => [channelId, m])
         })
         .map(([channelId, messageDTO]: [string, MessageDTO]) => {
-            console.log("ChannelId", channelId)
-            console.log("messageDTO", messageDTO)
             return createActionChannelMessageSentSuccess(
                 channelId,
                 messageDTOToMessage(messageDTO),
@@ -78,7 +76,6 @@ const adjustVotes = (action$: Object, deps: EpicDeps) =>
             }
             const [channelId, message] = channelMessage
             const adjustedMessage = adjustMessageVotes(message, addVotes)
-            console.log(adjustedMessage)
             const messageDTO = messageToMessageDTO(adjustedMessage)
 
             const headers = getHttpHeaders(deps.getState())

@@ -1,15 +1,14 @@
 // @flow
 
 import Rx from "rxjs"
-import { getFormValues } from "redux-form"
+import { compareAsc } from "date-fns"
 import type { EpicDeps } from "../../utils/configureEpics"
-import { CHANNELS_GOTO_ADD, CHANNELS_SELECT } from "../../actions/channels/channels"
+import { CHANNELS_SELECT } from "../../actions/channels/channels"
 import { getChannelMessages } from "../../api/httpRequests"
 import { getHttpHeaders } from "../../selectors/httpHeaders"
 import { createActionChannelMessagesReceived } from "../../actions/messages"
 import type { MessageDTO } from "../../types"
 import { messageDTOToMessage } from "../../modelTransform/message"
-import { compareAsc } from "date-fns"
 
 
 const channelsSelect = (action$: Object, deps: EpicDeps) =>

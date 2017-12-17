@@ -4,10 +4,10 @@ import React from "react"
 import { connect } from "react-redux"
 import { reduxForm } from "redux-form"
 import { Button, Modal } from "antd"
-import { createActionModalDismiss } from "../actions/channels/addChannel"
-import { createActionDeleteChannelSubmit } from "../actions/channels/channels"
-import { getActiveChannel } from "../selectors/channels"
-import { getSignedInUserEmail } from "../selectors/users"
+import { createActionModalDismiss } from "../../actions/channels/addChannel"
+import { createActionDeleteChannelSubmit } from "../../actions/channels/channels"
+import { getActiveChannel } from "../../selectors/channels"
+import { getSignedInUserEmail } from "../../selectors/users"
 
 
 class DeleteChannelC extends React.Component<*> {

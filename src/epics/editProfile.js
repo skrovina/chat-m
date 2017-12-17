@@ -6,7 +6,7 @@ import {
     createActionEditProfilePost, createActionEditProfilePostSuccess, EDIT_PROFILE_POST, EDIT_PROFILE_POST_SUCCESS,
     EDIT_PROFILE_SUBMIT,
 } from "../actions/profile"
-import { updateUserProfile } from "../entityFunctions/entityFunctions"
+import { updateUserProfile } from "../utils/entityFunctions"
 import { getSignedUser } from "../selectors/users"
 import type { EpicDeps } from "../utils/configureEpics"
 import { createActionModalDismiss } from "../actions/channels/addChannel"
@@ -20,7 +20,6 @@ import { updateUser } from "../api/httpRequests"
 const submit = (action$: Object, deps: EpicDeps) =>
     action$.ofType(EDIT_PROFILE_SUBMIT)
         .map(() => {
-            console.log("jdfkjdkfjk")
             const { name, avatar } = getFormValues("edit-profile")(deps.getState())
             const base64 = avatar && avatar.base64
 

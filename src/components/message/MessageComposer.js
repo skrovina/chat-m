@@ -4,9 +4,9 @@ import React from "react"
 import styled from "styled-components"
 import { Button, Input } from "antd"
 import { connect } from "react-redux"
-import { Header } from "./Header"
-import { createActionMessageComposeSend, createActionMessageComposeTextChanged } from "../actions/messages"
-import { getActiveChannelNewMessageText, getNewMessageTextValid } from "../selectors/activeChannelx"
+import { Header } from "../Header"
+import { createActionMessageComposeSend, createActionMessageComposeTextChanged } from "../../actions/messages"
+import { getActiveChannelNewMessageText, getNewMessageTextValid } from "../../selectors/activeChannelx"
 
 const HeaderWithTopBorder = styled(Header)`
     border-top: 1px solid lightgrey;

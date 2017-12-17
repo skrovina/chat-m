@@ -4,19 +4,21 @@ import React from "react"
 import { connect } from "react-redux"
 import { Field, reduxForm } from "redux-form"
 import { Button, Form, Modal } from "antd"
-import { FormInput } from "./forms/FormInput"
-import { createActionModalDismiss } from "../actions/channels/addChannel"
-import { createActionRenameChannelSubmit } from "../actions/channels/channels"
-import { getActiveChannel } from "../selectors/channels"
+import { createActionModalDismiss } from "../../actions/channels/addChannel"
+import { getActiveChannel } from "../../selectors/channels"
+import { getSignedUser } from "../../selectors/users"
+import { createActionEditProfileSubmit } from "../../actions/profile"
+import { FormInput } from "./FormInput"
+import { FormFileInput } from "./FormFileInput"
 
 
-class RenameChannelC extends React.Component<*> {
+class EditProfileC extends React.Component<*> {
     props: *
 
     render() {
         return (
             <Modal
-                title="Rename Channel"
+                title="Edit Profile"
                 visible={true}
                 onCancel={this.props.onCancel}
                 footer={[
@@ -35,10 +37,15 @@ class RenameChannelC extends React.Component<*> {
                 <Form>
                     <Field
                         name="name"
-                        label="New Name"
-                        placeholder={this.props.channel ? this.props.channel.name : ""}
-                        onPressEnter={this.props.handleSubmit(this.props.onSubmit)}
-                        component={FormInput} />
+                        label="Name"
+                        placeholder={this.props.user && this.props.user.name}
+                        component={FormInput}
+                    />
+                    <Field
+                        name="avatar"
+                        label="Avatar"
+                        component={FormFileInput}
+                    />
                 </Form>
             </Modal>
         )
@@ -47,14 +54,15 @@ class RenameChannelC extends React.Component<*> {
 
 const mapStateToProps = (state) => ({
     channel: getActiveChannel(state),
+    user: getSignedUser(state),
 })
 
 const mapDispatchToProps = {
-    onSubmit: createActionRenameChannelSubmit,
+    onSubmit: createActionEditProfileSubmit,
     onCancel: createActionModalDismiss,
 }
 
-export const RenameChannel = reduxForm({
-    form: "rename-channel",
+export const EditProfile = reduxForm({
+    form: "edit-profile",
     destroyOnUnmount: true,
-})(connect(mapStateToProps, mapDispatchToProps)(RenameChannelC))
+})(connect(mapStateToProps, mapDispatchToProps)(EditProfileC))

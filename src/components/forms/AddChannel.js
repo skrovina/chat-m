@@ -4,23 +4,20 @@ import React from "react"
 import { connect } from "react-redux"
 import { Field, reduxForm } from "redux-form"
 import { Button, Form, Modal } from "antd"
-import { FormInput } from "./forms/FormInput"
-import { createActionModalDismiss } from "../actions/channels/addChannel"
-import { createActionInviteChannelSubmit } from "../actions/channels/channels"
+import { FormInput } from "./FormInput"
+import { createActionModalDismiss, createActionAddChannelSubmit } from "../../actions/channels/addChannel"
 
-
-class InviteChannelC extends React.Component<*> {
+class AddChannelC extends React.Component<*> {
     render() {
         return (
             <Modal
-                title="Invite People To Channel"
+                title="Add New Channel"
                 visible={true}
                 onCancel={this.props.onCancel}
                 footer={[
                     <Button key="cancel" onClick={this.props.onCancel}>Cancel</Button>,
                     <Button
                         key="submit"
-                        type="primary"
                         htmlType="submit"
                         disabled={this.props.submitting
                         || this.props.pristine
@@ -30,11 +27,7 @@ class InviteChannelC extends React.Component<*> {
                     </Button>,
                 ]}>
                 <Form>
-                    <Field
-                        name="email"
-                        label="Email"
-                        component={FormInput}
-                        onPressEnter={this.props.handleSubmit(this.props.onSubmit)} />
+                    <Field name="name" label="Name" component={FormInput} />
                 </Form>
             </Modal>
         )
@@ -44,11 +37,11 @@ class InviteChannelC extends React.Component<*> {
 const mapStateToProps = () => ({})
 
 const mapDispatchToProps = {
-    onSubmit: createActionInviteChannelSubmit,
+    onSubmit: createActionAddChannelSubmit,
     onCancel: createActionModalDismiss,
 }
 
-export const InviteChannel = reduxForm({
-    form: "invite-channel",
+export const AddChannel = reduxForm({
+    form: "add-channel",
     destroyOnUnmount: true,
-})(connect(mapStateToProps, mapDispatchToProps)(InviteChannelC))
+})(connect(mapStateToProps, mapDispatchToProps)(AddChannelC))
