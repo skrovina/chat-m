@@ -14,7 +14,6 @@ import {
     RENAME_CHANNEL_SUBMIT,
 } from "../../actions/channels/channels"
 import { getHttpHeaders } from "../../selectors/httpHeaders"
-import { getSignedInUserEmail } from "../../selectors/users"
 import { updateChannel } from "../../api/httpRequests"
 import type { Channel, ChannelDTO } from "../../types"
 import { channelDTOToChannel, channelToChannelDTO } from "../../modelTransform/channel"

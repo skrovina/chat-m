@@ -1,9 +1,13 @@
 // @flow
 
 import Rx from "rxjs"
+import { getFormValues } from "redux-form"
 import {
-    createActionChannelMessageSentSuccess, createActionMessageAdjustVotes, createActionMessageAdjustVotesSuccess,
-    createActionMessageComposeSent,
+    createActioEditMessagePostSuccess,
+    createActionChannelMessageSentSuccess, createActionDeleteMessagePostSuccess, createActionMessageAdjustVotes,
+    createActionMessageAdjustVotesSuccess,
+    createActionMessageComposeSent, DELETE_MESSAGE_POST_SUCCESS, DELETE_MESSAGE_SUBMIT, EDIT_MESSAGE_POST_SUCCESS,
+    EDIT_MESSAGE_SUBMIT,
     MESSAGE_ADJUST_VOTES,
     MESSAGE_COMPOSE_SEND, MESSAGE_DOWNVOTE, MESSAGE_UPVOTE,
 } from "../actions/messages"
@@ -11,12 +15,13 @@ import { getActiveChannelId, getActiveChannelNewMessageText } from "../selectors
 import { createMessage } from "../entityCreators/message"
 import { getSignedInUserEmail } from "../selectors/users"
 import { messageDTOToMessage, messageToMessageDTO } from "../modelTransform/message"
-import { postChannelMessage, updateChannelMessage } from "../api/httpRequests"
+import { deleteChannelMessage, postChannelMessage, updateChannelMessage } from "../api/httpRequests"
 import type { EpicDeps } from "../utils/configureEpics"
 import { getHttpHeaders } from "../selectors/httpHeaders"
-import type { Channel, Message, MessageDTO } from "../types"
-import { getChannelMessagesState, getChannelMessageById } from "../selectors/channelMessages"
-import { adjustMessageVotes } from "../entityFunctions/entityFunctions"
+import type { Message, MessageDTO } from "../types"
+import { getChannelMessageById } from "../selectors/channelMessages"
+import { adjustMessageVotes, updateMessageValue } from "../entityFunctions/entityFunctions"
+import { createActionModalDismiss } from "../actions/channels/addChannel"
 
 
 const sendMessage = (action$: Object, deps: EpicDeps) =>
@@ -91,10 +96,80 @@ const adjustVotes = (action$: Object, deps: EpicDeps) =>
             return []
         })
 
+
+const deleteMessage = (action$: Object, deps: EpicDeps) =>
+    action$.ofType(DELETE_MESSAGE_SUBMIT)
+        .concatMap((action) => {
+            const { messageId } = action.payload
+            const channelMessage: ?[string, Message] = getChannelMessageById(messageId, deps.getState())
+
+            if (!channelMessage) {
+                return []
+            }
+            const channelId = channelMessage[0]
+            const headers = getHttpHeaders(deps.getState())
+
+
+            return Rx.Observable.from(deleteChannelMessage(channelId, messageId, headers))
+                .map(() => [channelId, messageId])
+        })
+        .map(([channelId, messageId]: [string, string]) => createActionDeleteMessagePostSuccess(channelId, messageId))
+        .catch((e) => {
+            console.log(e)
+            return []
+        })
+
+const editMessage = (action$: Object, deps: EpicDeps) =>
+    action$.ofType(EDIT_MESSAGE_SUBMIT)
+        .concatMap((action) => {
+            const { messageId } = action.payload
+            const channelMessage: ?[string, Message] = getChannelMessageById(messageId, deps.getState())
+            if (!channelMessage) {
+                return []
+            }
+            const { body } = getFormValues("edit-message")(deps.getState())
+            if (!body) {
+                throw new Error("Cannot get 'body' from form!")
+            }
+
+            const [channelId, message] = channelMessage
+
+            const headers = getHttpHeaders(deps.getState())
+            const updatedMessage: Message = updateMessageValue(message, body)
+            const messageDTO = messageToMessageDTO(updatedMessage)
+
+            return Rx.Observable.from(updateChannelMessage(channelId, messageDTO, headers))
+                .map(m => [channelId, m])
+        })
+        .map(([channelId, messageDTO]: [string, MessageDTO]) => {
+            const message = messageDTOToMessage(messageDTO)
+
+            return createActioEditMessagePostSuccess(channelId, message)
+        })
+        .catch((e) => {
+            console.log(e)
+            return []
+        })
+
+
+const deletePostSuccessCloseModal = (action$: Object, deps: EpicDeps) =>
+    action$.ofType(DELETE_MESSAGE_POST_SUCCESS)
+        .map(() => createActionModalDismiss())
+
+
+const editPostSuccessCloseModal = (action$: Object, deps: EpicDeps) =>
+    action$.ofType(EDIT_MESSAGE_POST_SUCCESS)
+        .map(() => createActionModalDismiss())
+
+
 export default [
     sendMessage,
     sentMessage,
     downvoteMessage,
     upvoteMessage,
     adjustVotes,
+    deleteMessage,
+    deletePostSuccessCloseModal,
+    editMessage,
+    editPostSuccessCloseModal,
 ]

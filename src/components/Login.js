@@ -2,7 +2,7 @@
 
 import React from "react"
 import { Field, reduxForm } from "redux-form"
-import { Link, Redirect } from "react-router-dom"
+import { Redirect } from "react-router-dom"
 import { Form, Button } from "antd"
 import { connect } from "react-redux"
 import type { FormProps } from "redux-form"

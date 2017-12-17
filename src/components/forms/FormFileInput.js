@@ -2,7 +2,6 @@
 
 import React from "react"
 import FileBase64 from "react-file-base64"
-import { Input } from "antd"
 import { formRenderer } from "./formRenderer"
 import type { LabelFieldProps } from "./formRenderer"
 

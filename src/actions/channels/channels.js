@@ -1,7 +1,7 @@
 // @flow
 
 import { push } from "react-router-redux"
-import type { Channel, ChannelDTO, NewChannel } from "../../types"
+import type { Channel, ChannelDTO } from "../../types"
 
 export const CHANNELS_SYNC = "channels/sync"
 export const createActionChannelsSync = (channels: { [key: string]: Channel }) => ({

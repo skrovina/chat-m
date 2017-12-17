@@ -23,6 +23,7 @@ class RenameChannelC extends React.Component<*> {
                     <Button key="cancel" onClick={this.props.onCancel}>Cancel</Button>,
                     <Button
                         key="submit"
+                        type="primary"
                         htmlType="submit"
                         disabled={this.props.submitting
                         || this.props.pristine

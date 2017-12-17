@@ -1,10 +1,10 @@
 // @flow
 
+import { createSelector } from "reselect"
 import type { StateObject } from "../reducers/app"
-import type { Auth, User } from "../types"
+import type { User } from "../types"
 import { getAuth } from "./auth"
 import type { UsersStateObject } from "../reducers/users"
-import { createSelector } from "reselect"
 
 export const getSignedInUserEmail = (state: StateObject): ?string =>
     // let

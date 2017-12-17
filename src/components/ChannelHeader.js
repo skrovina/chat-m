@@ -35,6 +35,8 @@ const Title = styled.h4`
 `
 
 class ChannelHeaderC extends React.Component<*> {
+    props: ChannelHeaderProps
+
     render() {
         return (
             <Header>

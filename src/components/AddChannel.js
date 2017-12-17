@@ -4,10 +4,7 @@ import React from "react"
 import { connect } from "react-redux"
 import { Field, reduxForm } from "redux-form"
 import { Button, Form, Modal } from "antd"
-import { push } from "react-router-redux"
-import styled from "styled-components"
 import { FormInput } from "./forms/FormInput"
-import { Link, withRouter } from "react-router-dom"
 import { createActionModalDismiss, createActionAddChannelSubmit } from "../actions/channels/addChannel"
 
 class AddChannelC extends React.Component<*> {
@@ -37,7 +34,7 @@ class AddChannelC extends React.Component<*> {
     }
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = () => ({})
 
 const mapDispatchToProps = {
     onSubmit: createActionAddChannelSubmit,

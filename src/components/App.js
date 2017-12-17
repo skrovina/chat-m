@@ -25,7 +25,7 @@ class App extends React.Component<*, *> {
     }
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = () => ({})
 
 const mapDispatchToProps = {
     onAppLoad: createActionAppLoaded,

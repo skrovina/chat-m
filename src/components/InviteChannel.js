@@ -20,6 +20,7 @@ class InviteChannelC extends React.Component<*> {
                     <Button key="cancel" onClick={this.props.onCancel}>Cancel</Button>,
                     <Button
                         key="submit"
+                        type="primary"
                         htmlType="submit"
                         disabled={this.props.submitting
                         || this.props.pristine
@@ -40,7 +41,7 @@ class InviteChannelC extends React.Component<*> {
     }
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = () => ({})
 
 const mapDispatchToProps = {
     onSubmit: createActionInviteChannelSubmit,

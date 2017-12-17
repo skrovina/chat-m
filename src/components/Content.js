@@ -1,12 +1,11 @@
 // @flow
 
 import React from "react"
-import { Redirect, Route, Switch, withRouter } from "react-router-dom"
+import styled from "styled-components"
+import { Redirect, Route } from "react-router-dom"
 import { Login } from "./Login"
 import { Main } from "./Main"
-import styled from "styled-components"
 import { PrivateRoute } from "./PrivateRoute"
-import { AddChannel } from "./AddChannel"
 
 
 const ModalContainer = styled.div`

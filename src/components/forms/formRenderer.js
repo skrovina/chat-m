@@ -2,7 +2,7 @@
 
 import React from "react"
 import { Form } from "antd"
-//import type { FieldProps } from "redux-form"
+// import type { FieldProps } from "redux-form"
 
 
 export type LabelFieldProps = *// FieldProps & { label: string }

@@ -33,3 +33,10 @@ export const adjustMessageVotes = (message: Message, addVotes: number): Message 
         ...message,
         upvoteCount: message.upvoteCount + addVotes,
     })
+
+export const updateMessageValue = (message: Message, value: string): Message =>
+    // $FlowFixMe
+    ({
+        ...message,
+        value: value,
+    })

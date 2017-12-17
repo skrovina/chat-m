@@ -12,7 +12,7 @@ const StyledMsg = styled.div`
     background: white;
     border-radius: 2rem;
     border: 0.5px solid lightgrey;
-    padding: 1.8rem;
+    padding: 1.3rem;
     margin-top: 1rem;
     margin-bottom: 1rem;
     margin-left: ${({ my }) => (my ? 8 : 1.8)}rem;
@@ -48,7 +48,8 @@ const Title = styled.b`
 `
 
 const Date = styled.div`
-    color: grey;
+    color: darkgray;
+    font-size: 1rem;
 `
 
 const Upvoter = styled.div`
@@ -91,7 +92,7 @@ export class MessageBubble extends React.Component<*> {
             <StyledMsg my={this.props.my}>
                 <LeftCol>
                     <Avatar size="large" icon="user" src={avatar} />
-                    <a onClick={this.onEdit}>EDIT</a>
+                    {this.props.my ? <a onClick={this.onEdit}>EDIT</a> : null}
                 </LeftCol>
                 <CenterCol>
                     <Title>{title}</Title>

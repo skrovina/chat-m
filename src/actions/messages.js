@@ -30,15 +30,6 @@ export const createActionChannelMessagesReceived = (channelId: string, messages:
     },
 })
 
-export const ACTIVE_CHANNEL_MESSAGES_SYNC = "channel/active/messages/sync"
-export const createActionActiveChannelMessagesSync = (channelId: string, messages: Message[]) => ({
-    type: ACTIVE_CHANNEL_MESSAGES_SYNC,
-    payload: {
-        channelId: channelId,
-        messages: messages,
-    },
-})
-
 export const MESSAGE_SEARCH_TEXT_CHANGED = "messages/search/textChanged"
 export const createActionMessageSearchTextChanged = (text: string) => ({
     type: MESSAGE_SEARCH_TEXT_CHANGED,
@@ -90,5 +81,39 @@ export const createActionMessageAdjustVotesSuccess = (channelId: string, message
     payload: {
         channelId: channelId,
         message: message,
+    },
+})
+
+export const EDIT_MESSAGE_SUBMIT = "message/edit/submit"
+export const createActioEditMessageSubmit = (messageId: string) => ({
+    type: EDIT_MESSAGE_SUBMIT,
+    payload: {
+        messageId: messageId,
+    },
+})
+
+export const EDIT_MESSAGE_POST_SUCCESS = "message/delete/post/success"
+export const createActioEditMessagePostSuccess = (channelId: string, message: Message) => ({
+    type: EDIT_MESSAGE_POST_SUCCESS,
+    payload: {
+        channelId: channelId,
+        message: message,
+    },
+})
+
+export const DELETE_MESSAGE_SUBMIT = "message/delete/submit"
+export const createActionDeleteMessageSubmit = (messageId: string) => ({
+    type: DELETE_MESSAGE_SUBMIT,
+    payload: {
+        messageId: messageId,
+    },
+})
+
+export const DELETE_MESSAGE_POST_SUCCESS = "message/edit/post/success"
+export const createActionDeleteMessagePostSuccess = (channelId: string, messageId: string) => ({
+    type: DELETE_MESSAGE_POST_SUCCESS,
+    payload: {
+        channelId: channelId,
+        messageId: messageId,
     },
 })

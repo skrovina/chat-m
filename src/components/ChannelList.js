@@ -2,8 +2,7 @@
 
 import React from "react"
 import { connect } from "react-redux"
-import { Button, List, Menu } from "antd"
-import { Header } from "./Header"
+import { Menu } from "antd"
 import { getUserChannelsSorted } from "../selectors/channels"
 import type { Channel } from "../types"
 import { createActionChannelsSelect } from "../actions/channels/channels"
