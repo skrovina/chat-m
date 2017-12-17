@@ -2,7 +2,7 @@
 
 import { Logger } from "../utils/logger"
 
-const logHttpRequests = true
+const logHttpRequests = false
 
 type HttpRequestType = {|
     method: "GET" | "POST" | "DELETE" | "PATCH" | "PUT",
