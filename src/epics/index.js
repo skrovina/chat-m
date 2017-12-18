@@ -1,6 +1,5 @@
 // @flow
 
-import users from "./users"
 import login from "./login"
 import logout from "./logout"
 import sync from "./sync"
@@ -11,10 +10,10 @@ import renameChannel from "./channels/renameChannel"
 import deleteChannel from "./channels/deleteChannel"
 import messages from "./messages"
 import editProfile from "./editProfile"
+import errorDisplay from "./notificationDisplay"
 
 
 export const epics = [
-    ...users,
     ...login,
     ...logout,
     ...sync,
@@ -25,4 +24,5 @@ export const epics = [
     ...renameChannel,
     ...deleteChannel,
     ...editProfile,
+    ...errorDisplay,
 ]

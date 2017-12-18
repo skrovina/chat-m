@@ -6,7 +6,7 @@ import type { Channel } from "../types"
 import type { ChannelsStateObject } from "../reducers/channels"
 import { getSignedInUserEmail } from "./users"
 import { fromAssoc } from "../utils/collections"
-import { getActiveChannelId } from "./activeChannelx"
+import { getActiveChannelId } from "./activeChannel"
 
 export const getAllChannelsObject = (state: StateObject): ChannelsStateObject =>
     state.channels

@@ -1,7 +1,7 @@
 // @flow
 
 import Rx from "rxjs"
-import { getFormValues } from "redux-form"
+import { getFormValues, startSubmit, stopSubmit } from "redux-form"
 import type { EpicDeps } from "../utils/configureEpics"
 import {
     createActionLoginAuthorized, createActionSignupSuccess, LOGIN_AUTHORIZED, LOGIN_REQUESTED,
@@ -14,11 +14,13 @@ import type { User, UserDTO } from "../types"
 import { userDTOToUser, userToUserDTO } from "../modelTransform/user"
 import { createActionUserUpdate } from "../actions/users"
 import { createUser } from "../entityCreators/user"
+import { createActionShowError, createActionShowSuccess } from "../actions/notificationDisplay"
 
 
-const logInEpic = (action$: Object, deps: EpicDeps) =>
+export const logInEpic = (action$: Object, deps: EpicDeps) =>
     action$.ofType(LOGIN_REQUESTED)
         .switchMap(() => {
+            console.log("started")
             const { email } = getFormValues("login")(deps.getState())
             const headers = getHttpHeaders(deps.getState())
             if (!email) {
@@ -26,13 +28,18 @@ const logInEpic = (action$: Object, deps: EpicDeps) =>
             }
 
             return Rx.Observable.from(logIn(email, headers))
-                .map((token) => [token, email])
+                .map((token) =>
+                    createActionLoginAuthorized({ token: token, email: email }))
+                .catch((e) => {
+                    return e.status === 400
+                        ? [stopSubmit("login", { email: "User with email is not registered" })]
+                        : [stopSubmit("login"), createActionShowError("Unknown Login Error")]
+                })
         })
-        .map(([token, email]) => createActionLoginAuthorized({ token: token, email: email }))
-        .catch((e) => {
-            console.log(e)
-            return []
-        })
+
+export const logInSubmit = (action$: Object, deps: EpicDeps) =>
+    action$.ofType(LOGIN_REQUESTED)
+        .map(() => startSubmit("login"))
 
 const loginAuthorizedSaveAuth = (action$: Object, deps: EpicDeps) =>
     action$.ofType(LOGIN_AUTHORIZED)
@@ -55,11 +62,13 @@ const signUpEpic = (action$: Object, deps: EpicDeps) =>
             const userDTO = userToUserDTO(user)
 
             return Rx.Observable.from(registerUser(userDTO, headers))
-        })
-        .map((user: UserDTO) => createActionSignupSuccess(userDTOToUser(user)))
-        .catch((e) => {
-            console.log(e)
-            return []
+                .map((receivedUserDTO: UserDTO) => createActionSignupSuccess(userDTOToUser(receivedUserDTO)))
+                .catch((e) => {
+                    return [stopSubmit("login"),
+                        createActionShowError(e.status === 400
+                            ? "Email already used, please log in."
+                            : "Unknown Signup Error")]
+                })
         })
 
 const signUpSync = (action$: Object, deps: EpicDeps) =>
@@ -70,6 +79,9 @@ const loginAuthorizedDownloadData = (action$: Object, deps: EpicDeps) =>
     action$.ofType(LOGIN_AUTHORIZED)
         .map(() => createActionSyncStart())
 
+const signUpSuccessNotify = (action$: Object, deps: EpicDeps) =>
+    action$.ofType(SIGNUP_SUCCESS)
+        .map(({ payload: { user } }) => createActionShowSuccess("Suuccessfully signed up, you can log in now."))
 
 export default [
     logInEpic,
@@ -77,4 +89,6 @@ export default [
     loginAuthorizedDownloadData,
     signUpEpic,
     signUpSync,
+    logInSubmit,
+    signUpSuccessNotify,
 ]

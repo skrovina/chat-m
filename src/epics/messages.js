@@ -11,7 +11,7 @@ import {
     MESSAGE_ADJUST_VOTES,
     MESSAGE_COMPOSE_SEND, MESSAGE_DOWNVOTE, MESSAGE_UPVOTE,
 } from "../actions/messages"
-import { getActiveChannelId, getActiveChannelNewMessageText } from "../selectors/activeChannelx"
+import { getActiveChannelId, getActiveChannelNewMessageText } from "../selectors/activeChannel"
 import { createMessage } from "../entityCreators/message"
 import { getSignedInUserEmail } from "../selectors/users"
 import { messageDTOToMessage, messageToMessageDTO } from "../modelTransform/message"

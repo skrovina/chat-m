@@ -3,7 +3,7 @@
 import React from "react"
 import { Field, reduxForm } from "redux-form"
 import { Redirect } from "react-router-dom"
-import { Form, Button } from "antd"
+import { Form, Button, Alert } from "antd"
 import { connect } from "react-redux"
 import type { FormProps } from "redux-form"
 import styled from "styled-components"
@@ -14,13 +14,20 @@ import type { Auth } from "../types"
 import { createActionLoginRequested, createActionSignupRequested } from "../actions/login"
 
 
-const Container = styled.div`
+const TopLevelContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
     flex: auto;
     align-items: center;
     margin-top: 10%;
+`
+
+const FormContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 25rem;
 `
 
 const ButtonRow = styled.div`
@@ -37,6 +44,7 @@ const validate = (values: Object) => ({
 
 const Title = styled.h1`
     margin-bottom: 5rem;
+    text-align: center;
 `
 
 type LoginCProps = {
@@ -57,30 +65,42 @@ class LoginC extends React.Component<*> {
         }
 
         return (
-            <Container>
-                <Title>Log In</Title>
-                <Form onSubmit={this.props.handleSubmit(this.props.onLogin)}>
-                    <Field name="email" label="E-mail" component={FormInput} />
-                    <ButtonRow>
-                        <Button
-                            htmlType="submit"
-                            type="primary"
-                            disabled={this.props.submitting
-                            || this.props.pristine
-                            || this.props.invalid}>
-                            Log In
-                        </Button>
-                        <Button
-                            type="dashed"
-                            disabled={this.props.submitting
-                            || this.props.pristine
-                            || this.props.invalid}
-                            onClick={this.props.onSignUp}>
-                            Sign Up
-                        </Button>
-                    </ButtonRow>
-                </Form>
-            </Container>
+            <TopLevelContainer>
+                <FormContainer>
+                    <Title>Log In</Title>
+                    <Form>
+                        <Field
+                            name="email"
+                            label="E-mail"
+                            component={FormInput}
+                            onPressEnter={this.props.onLogin}
+                        />
+                        { this.props.error &&
+                            <Alert message={this.props.error} type="error" />
+                        }
+                        <ButtonRow>
+                            <Button
+                                type="dashed"
+                                loading={false}
+                                disabled={this.props.submitting
+                                || this.props.pristine
+                                || this.props.invalid}
+                                onClick={this.props.onSignUp}>
+                                Sign Up
+                            </Button>
+                            <Button
+                                loading={this.props.submitting}
+                                type="primary"
+                                onClick={this.props.onLogin}
+                                disabled={this.props.submitting
+                                || this.props.pristine
+                                || this.props.invalid}>
+                                Log In
+                            </Button>
+                        </ButtonRow>
+                    </Form>
+                </FormContainer>
+            </TopLevelContainer>
         )
     }
 }

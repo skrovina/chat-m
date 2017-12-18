@@ -6,7 +6,7 @@ import { Button, Input } from "antd"
 import { connect } from "react-redux"
 import { Header } from "../Header"
 import { createActionMessageComposeSend, createActionMessageComposeTextChanged } from "../../actions/messages"
-import { getActiveChannelNewMessageText, getNewMessageTextValid } from "../../selectors/activeChannelx"
+import { getActiveChannelNewMessageText, getNewMessageTextValid } from "../../selectors/activeChannel"
 
 const HeaderWithTopBorder = styled(Header)`
     border-top: 1px solid lightgrey;
