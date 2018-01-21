@@ -27,7 +27,11 @@ class AddChannelC extends React.Component<*> {
                     </Button>,
                 ]}>
                 <Form>
-                    <Field name="name" label="Name" component={FormInput} />
+                    <Field
+                        name="name"
+                        label="Name"
+                        component={FormInput}
+                        onPressEnter={this.props.handleSubmit(this.props.onSubmit)} />
                 </Form>
             </Modal>
         )
