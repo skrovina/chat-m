@@ -40,7 +40,7 @@ class ChannelHeaderC extends React.Component<*> {
     render() {
         return (
             <Header>
-                <Dropdown trigger={["click", "hover"]} overlay={menu} disabled={!this.props.channel}>
+                <Dropdown trigger={["click"]} overlay={menu} disabled={!this.props.channel}>
                     <Button
                         disabled={!this.props.channel}
                         icon="edit"

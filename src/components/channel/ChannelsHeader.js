@@ -30,7 +30,7 @@ class ChannelsHeaderC extends React.Component<*> {
     render() {
         return (
             <Header>
-                <Dropdown trigger={["click", "hover"]} overlay={menu(this.props.logOut)}>
+                <Dropdown trigger={["click"]} overlay={menu(this.props.logOut)}>
                     <Button icon="setting" shape="circle" />
                 </Dropdown>
                 <h4>Channels</h4>
