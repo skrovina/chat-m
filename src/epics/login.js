@@ -32,7 +32,7 @@ export const logInEpic = (action$: Object, deps: EpicDeps) =>
                     createActionLoginAuthorized({ token: token, email: email }))
                 .catch((e) => {
                     return e.status === 400
-                        ? [stopSubmit("login", { email: "User with email is not registered" })]
+                        ? [stopSubmit("login"), createActionShowError("User with email is not registered")]
                         : [stopSubmit("login"), createActionShowError("Unknown Login Error")]
                 })
         })
