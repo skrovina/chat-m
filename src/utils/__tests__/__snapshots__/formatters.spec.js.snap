@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`formatDateTime should format date time correctly 1`] = `"21.1.2018, 16:24"`;
