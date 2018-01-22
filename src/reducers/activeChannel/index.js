@@ -9,7 +9,6 @@ import { messageSearchReducer } from "./messageSearch"
 export type ActiveChannelStateObject = {|
     channelId: ?string,
     newMessageText: string,
-    searchText: string,
     messageSearchText: string,
 |}
 
