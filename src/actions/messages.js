@@ -101,7 +101,7 @@ export const createActioEditMessageSubmit = (messageId: string) => ({
 })
 
 export const EDIT_MESSAGE_POST_SUCCESS = "message/delete/post/success"
-export const createActioEditMessagePostSuccess = (channelId: string, message: Message) => ({
+export const createActionEditMessagePostSuccess = (channelId: string, message: Message) => ({
     type: EDIT_MESSAGE_POST_SUCCESS,
     payload: {
         channelId: channelId,

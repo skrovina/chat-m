@@ -9,7 +9,7 @@ export type ChannelsStateObject = { [key: string]: Channel }
 export const channelsReducer = (state: ChannelsStateObject = {}, action: Object) => {
     switch (action.type) {
         case CHANNELS_SYNC:
-            // TODO: merge only unchanged
+            // TODO: merge only locally unchanged
             return action.payload.channels
 
         default:

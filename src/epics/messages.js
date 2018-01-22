@@ -3,7 +3,7 @@
 import Rx from "rxjs"
 import { getFormValues } from "redux-form"
 import {
-    createActioEditMessagePostSuccess,
+    createActionEditMessagePostSuccess,
     createActionChannelMessageSentSuccess, createActionDeleteMessagePostSuccess, createActionMessageAdjustVotes,
     createActionMessageAdjustVotesSuccess,
     createActionMessageComposeSent, DELETE_MESSAGE_POST_SUCCESS, DELETE_MESSAGE_SUBMIT, EDIT_MESSAGE_POST_SUCCESS,
@@ -141,7 +141,7 @@ const editMessage = (action$: Object, deps: EpicDeps) =>
         .map(([channelId, messageDTO]: [string, MessageDTO]) => {
             const message = messageDTOToMessage(messageDTO)
 
-            return createActioEditMessagePostSuccess(channelId, message)
+            return createActionEditMessagePostSuccess(channelId, message)
         })
         .catch((e) => {
             console.log(e)

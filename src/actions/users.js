@@ -11,7 +11,7 @@ export const createActionUsersSync = (users: { [key: string]: User }) => ({
 })
 
 export const USER_UPDATE = "user/update"
-export const createActionUserUpdate = (user: User ) => ({
+export const createActionUserUpdate = (user: User) => ({
     type: USER_UPDATE,
     payload: {
         user: user,
