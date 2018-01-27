@@ -11,7 +11,7 @@ import {
     MESSAGE_ADJUST_VOTES,
     MESSAGE_COMPOSE_SEND, MESSAGE_DOWNVOTE, MESSAGE_UPVOTE,
 } from "../actions/messages"
-import { getActiveChannelId, getActiveChannelNewMessageText } from "../selectors/activeChannel"
+import { getActiveChannelId, getActiveChannelNewMessageText } from "../selectors/activeChannelSelectors"
 import { createMessage } from "../entityCreators/message"
 import { getSignedInUserEmail } from "../selectors/users"
 import { messageDTOToMessage, messageToMessageDTO } from "../modelTransform/message"
@@ -24,7 +24,7 @@ import { adjustMessageVotes, updateMessageValue } from "../utils/entityFunctions
 import { createActionModalDismiss } from "../actions/channels/addChannel"
 
 
-const sendMessage = (action$: Object, deps: EpicDeps) =>
+export const sendMessage = (action$: Object, deps: EpicDeps) =>
     action$.ofType(MESSAGE_COMPOSE_SEND)
         .concatMap(() => {
             const email = getSignedInUserEmail(deps.getState())
@@ -52,20 +52,20 @@ const sendMessage = (action$: Object, deps: EpicDeps) =>
             return []
         })
 
-const sentMessage = (action$: Object, deps: EpicDeps) =>
+export const sentMessage = (action$: Object, deps: EpicDeps) =>
     action$.ofType(MESSAGE_COMPOSE_SEND)
         .map(() => createActionMessageComposeSent())
 
-const upvoteMessage = (action$: Object, deps: EpicDeps) =>
+export const upvoteMessage = (action$: Object, deps: EpicDeps) =>
     action$.ofType(MESSAGE_UPVOTE)
         .map(({ payload: { messageId } }) => createActionMessageAdjustVotes(messageId, 1))
 
-const downvoteMessage = (action$: Object, deps: EpicDeps) =>
+export const downvoteMessage = (action$: Object, deps: EpicDeps) =>
     action$.ofType(MESSAGE_DOWNVOTE)
         .map(({ payload: { messageId } }) => createActionMessageAdjustVotes(messageId, -1))
 
 
-const adjustVotes = (action$: Object, deps: EpicDeps) =>
+export const adjustVotes = (action$: Object, deps: EpicDeps) =>
     action$.ofType(MESSAGE_ADJUST_VOTES)
         .concatMap((action) => {
             const { messageId, addVotes } = action.payload
@@ -94,7 +94,7 @@ const adjustVotes = (action$: Object, deps: EpicDeps) =>
         })
 
 
-const deleteMessage = (action$: Object, deps: EpicDeps) =>
+export const deleteMessage = (action$: Object, deps: EpicDeps) =>
     action$.ofType(DELETE_MESSAGE_SUBMIT)
         .concatMap((action) => {
             const { messageId } = action.payload
@@ -116,7 +116,7 @@ const deleteMessage = (action$: Object, deps: EpicDeps) =>
             return []
         })
 
-const editMessage = (action$: Object, deps: EpicDeps) =>
+export const editMessage = (action$: Object, deps: EpicDeps) =>
     action$.ofType(EDIT_MESSAGE_SUBMIT)
         .concatMap((action) => {
             const { messageId } = action.payload
@@ -149,12 +149,12 @@ const editMessage = (action$: Object, deps: EpicDeps) =>
         })
 
 
-const deletePostSuccessCloseModal = (action$: Object, deps: EpicDeps) =>
+export const deletePostSuccessCloseModal = (action$: Object, deps: EpicDeps) =>
     action$.ofType(DELETE_MESSAGE_POST_SUCCESS)
         .map(() => createActionModalDismiss())
 
 
-const editPostSuccessCloseModal = (action$: Object, deps: EpicDeps) =>
+export const editPostSuccessCloseModal = (action$: Object, deps: EpicDeps) =>
     action$.ofType(EDIT_MESSAGE_POST_SUCCESS)
         .map(() => createActionModalDismiss())
 

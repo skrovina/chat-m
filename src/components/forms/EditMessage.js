@@ -7,7 +7,7 @@ import { Button, Form, Modal } from "antd"
 import { createActionModalDismiss } from "../../actions/channels/addChannel"
 import { getSignedUser } from "../../selectors/users"
 import { FormInput } from "./FormInput"
-import { createActioEditMessageSubmit, createActionDeleteMessageSubmit } from "../../actions/messages"
+import { createActionEditMessageSubmit, createActionDeleteMessageSubmit } from "../../actions/messages"
 import { getChannelMessageById } from "../../selectors/channelMessages"
 
 
@@ -75,7 +75,7 @@ export const editMessageComponent = (messageId: string) => {
     }
 
     const mapDispatchToProps = {
-        onSubmit: createActioEditMessageSubmit,
+        onSubmit: createActionEditMessageSubmit,
         onDelete: createActionDeleteMessageSubmit,
         onCancel: createActionModalDismiss,
     }

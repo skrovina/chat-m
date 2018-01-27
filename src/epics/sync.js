@@ -16,37 +16,39 @@ import { createActionLogOut } from "../actions/logout"
 import { getUserChannels } from "../selectors/channels"
 import { createActionChannelMessagesSync } from "../actions/messages"
 
+const sycPeriod = 10000
 
-const syncStart = (action$: Object, deps: EpicDeps) =>
+export const syncStart = (action$: Object, deps: EpicDeps) =>
     action$.ofType(APP_LOADED)
         .map(() => createActionSyncStart())
 
-const syncFire = (action$: Object, deps: EpicDeps) =>
-    action$.ofType(SYNC_START)
+export const syncFire = (period: number = sycPeriod, scheduler: Rx.Scheduler = null) =>
+    (action$: Object, deps: EpicDeps) =>
+        action$.ofType(SYNC_START)
         // Synchronize every 10 seconds
-        .switchMap(() => Rx.Observable.timer(0, 10000))
-        .map(() => createActionSyncFire())
+            .switchMap(() => Rx.Observable.timer(0, period, scheduler))
+            .map(() => createActionSyncFire())
 
-const syncUsers = (action$: Object, deps: EpicDeps) =>
+export const syncUsers = (action$: Object, deps: EpicDeps) =>
     action$.ofType(SYNC_FIRE)
-        .switchMap(() => {
+        .concatMap(() => {
             const headers = getHttpHeaders(deps.getState())
 
             return Rx.Observable.from(getAllUsers(headers))
-        })
-        .map((users: UserDTO[]) =>
-            createActionUsersSync(toAssoc(
-                users.map((u) => userDTOToUser(u)),
-                (u: User) => u.email,
-            )))
-        .catch((e) => {
-            console.log(e)
-            return [createActionLogOut()]
+                .map((users: UserDTO[]) =>
+                    createActionUsersSync(toAssoc(
+                        users.map((u) => userDTOToUser(u)),
+                        (u: User) => u.email,
+                    )))
+                .catch((e) => {
+                    console.log(e)
+                    return [createActionLogOut()]
+                })
         })
 
-const syncChannels = (action$: Object, deps: EpicDeps) =>
+export const syncChannels = (action$: Object, deps: EpicDeps) =>
     action$.ofType(SYNC_FIRE)
-        .switchMap(() => {
+        .concatMap(() => {
             const headers = getHttpHeaders(deps.getState())
 
             return Rx.Observable.from(getChannels(headers))
@@ -61,18 +63,17 @@ const syncChannels = (action$: Object, deps: EpicDeps) =>
             return [createActionLogOut()]
         })
 
-const syncMessages = (action$: Object, deps: EpicDeps) =>
+export const syncMessages = (action$: Object, deps: EpicDeps) =>
     action$.ofType(CHANNELS_SYNC)
-        .switchMap(() => {
+        .concatMap(() => {
             const channels: Channel[] = getUserChannels(deps.getState())
 
             return channels.map(channel => createActionChannelMessagesSync(channel.id))
         })
 
-
 export default [
     syncStart,
-    syncFire,
+    syncFire(),
     syncUsers,
     syncChannels,
     syncMessages,

@@ -6,7 +6,7 @@ import { reduxForm } from "redux-form"
 import { Button, Modal } from "antd"
 import { createActionModalDismiss } from "../../actions/channels/addChannel"
 import { createActionDeleteChannelSubmit } from "../../actions/channels/channels"
-import { getActiveChannel } from "../../selectors/channels"
+import { getActiveChannel } from "../../selectors/activeChannelSelectors"
 import { getSignedInUserEmail } from "../../selectors/users"
 
 

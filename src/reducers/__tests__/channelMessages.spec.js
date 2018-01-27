@@ -1,101 +1,14 @@
-import { createActionUsersSync, createActionUserUpdate } from "../../actions/users"
 import { channelMessagesReducer } from "../channelMessages"
 import {
-    createActionEditMessagePostSuccess, createActionChannelMessageSentSuccess,
-    createActionChannelMessagesReceived, createActionDeleteMessagePostSuccess,
+    createActionEditMessagePostSuccess,
+    createActionChannelMessageSentSuccess,
+    createActionChannelMessagesReceived,
+    createActionDeleteMessagePostSuccess,
 } from "../../actions/messages"
+import { channelMessagesAssoc, messagesArray } from "../../test/fixtures"
 
 
 const defaultState = {}
-
-const channelMessagesAssoc = {
-    "channel-id-1": [
-        {
-            id: "message-id-1",
-            value: "1st message",
-            created: {
-                at: "2018-01-21T11:33:51.0210191Z",
-                by: "skrovinam@gmail.com",
-            },
-            updated: {
-                at: "2018-01-21T11:33:51.0210191Z",
-                by: "skrovinam@gmail.com",
-            },
-            upvoteCount: 0,
-        },
-        {
-            id: "message-id-2",
-            value: "Hola",
-            created: {
-                at: "2018-01-21T11:37:50.3199429Z",
-                by: "d@d.com",
-            },
-            updated: {
-                at: "2018-01-21T11:37:50.3199429Z",
-                by: "d@d.com",
-            },
-            upvoteCount: 5,
-        },
-    ],
-    "channel-id-2": [
-        {
-            id: "message-id-3",
-            value: "Hello",
-            created: {
-                at: "2018-01-21T11:26:31.9366796Z",
-                by: "d@d.com",
-            },
-            updated: {
-                at: "2018-01-21T11:26:31.9366796Z",
-                by: "d@d.com",
-            },
-            upvoteCount: 6,
-        },
-        {
-            id: "68f7a3b4-0616-4ad2-8f9e-bf1477627e7e",
-            value: "Hello once again!",
-            created: {
-                at: "2018-01-21T11:26:40.7914142Z",
-                by: "d@d.com",
-            },
-            updated: {
-                at: "2018-01-21T11:26:40.7914142Z",
-                by: "d@d.com",
-            },
-            upvoteCount: 8,
-        },
-    ],
-    "channel-id-3": [],
-}
-
-const messagesArray = [
-    {
-        id: "message-id-1",
-        value: "1st message",
-        created: {
-            at: "2018-01-21T11:33:51.0210191Z",
-            by: "skrovinam@gmail.com",
-        },
-        updated: {
-            at: "2018-01-21T11:33:51.0210191Z",
-            by: "skrovinam@gmail.com",
-        },
-        upvoteCount: 0,
-    },
-    {
-        id: "message-id-2",
-        value: "Hola",
-        created: {
-            at: "2018-01-21T11:37:50.3199429Z",
-            by: "d@d.com",
-        },
-        updated: {
-            at: "2018-01-21T11:37:50.3199429Z",
-            by: "d@d.com",
-        },
-        upvoteCount: 5,
-    },
-]
 
 const updatedUser = {
     email: "email@example.com",

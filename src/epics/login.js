@@ -41,16 +41,17 @@ export const logInSubmit = (action$: Object, deps: EpicDeps) =>
     action$.ofType(LOGIN_REQUESTED)
         .map(() => startSubmit("login"))
 
-const loginAuthorizedSaveAuth = (action$: Object, deps: EpicDeps) =>
-    action$.ofType(LOGIN_AUTHORIZED)
-        .switchMap((action) => {
-            const { payload: { auth } } = action
-            localStorage.setItem("auth", JSON.stringify(auth))
+export const loginAuthorizedSaveAuth = (localStorage: Object) =>
+    (action$: Object, deps: EpicDeps) =>
+        action$.ofType(LOGIN_AUTHORIZED)
+            .switchMap((action) => {
+                const { payload: { auth } } = action
+                localStorage.setItem("auth", JSON.stringify(auth))
 
-            return []
-        })
+                return []
+            })
 
-const signUpEpic = (action$: Object, deps: EpicDeps) =>
+export const signUpEpic = (action$: Object, deps: EpicDeps) =>
     action$.ofType(SIGNUP_REQUESTED)
         .mergeMap(() => {
             const { email, name } = getFormValues("login")(deps.getState())
@@ -71,21 +72,21 @@ const signUpEpic = (action$: Object, deps: EpicDeps) =>
                 })
         })
 
-const signUpSync = (action$: Object, deps: EpicDeps) =>
+export const signUpSync = (action$: Object, deps: EpicDeps) =>
     action$.ofType(SIGNUP_SUCCESS)
         .map(({ payload: { user } }) => createActionUserUpdate(user))
 
-const loginAuthorizedDownloadData = (action$: Object, deps: EpicDeps) =>
+export const loginAuthorizedDownloadData = (action$: Object, deps: EpicDeps) =>
     action$.ofType(LOGIN_AUTHORIZED)
         .map(() => createActionSyncStart())
 
-const signUpSuccessNotify = (action$: Object, deps: EpicDeps) =>
+export const signUpSuccessNotify = (action$: Object, deps: EpicDeps) =>
     action$.ofType(SIGNUP_SUCCESS)
-        .map(({ payload: { user } }) => createActionShowSuccess("Suuccessfully signed up, you can log in now."))
+        .map(({ payload: { user } }) => createActionShowSuccess("Successfully signed up, you can log in now."))
 
 export default [
     logInEpic,
-    loginAuthorizedSaveAuth,
+    loginAuthorizedSaveAuth(process.env.NODE_ENV === "test" ? {} : localStorage),
     loginAuthorizedDownloadData,
     signUpEpic,
     signUpSync,

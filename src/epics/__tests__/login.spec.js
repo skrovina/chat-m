@@ -1,11 +1,38 @@
 import { ActionsObservable } from "redux-observable"
+import "rxjs"
 import { marbles } from "rxjs-marbles"
 
-import { getFormValues } from "redux-form"
-import { createActionLoginAuthorized, createActionLoginRequested } from "../../actions/login"
+import { getFormValues, startSubmit } from "redux-form"
+import {
+    createActionLoginAuthorized,
+    createActionLoginRequested,
+    createActionSignupRequested,
+    createActionSignupSuccess,
+} from "../../actions/login"
 import { getHttpHeaders } from "../../selectors/httpHeaders"
-import { logIn } from "../../api/httpRequests"
-import { logInEpic } from "../login"
+import { logIn, registerUser } from "../../api/httpRequests"
+import {
+    loginAuthorizedDownloadData,
+    loginAuthorizedSaveAuth,
+    logInEpic,
+    logInSubmit,
+    signUpEpic,
+    signUpSuccessNotify,
+    signUpSync,
+} from "../login"
+import {
+    authFixture,
+    emailFixture,
+    headersFixture,
+    nameFixture,
+    tokenFixture,
+    user,
+    userDTO,
+} from "../../test/fixtures"
+import { createActionUserUpdate } from "../../actions/users"
+import { createActionSyncStart } from "../../actions/sync"
+import { createActionShowSuccess } from "../../actions/notificationDisplay"
+
 
 jest.mock("redux-form")
 jest.mock("../../api/httpRequests")
@@ -17,30 +44,132 @@ const epicDeps = {
 
 describe("logInEpic", () => {
     it("should authorize correctly", marbles((m) => {
-        const token = "ajf9oiejkjef"
-        const email = "test@example.com"
-        const auth = { token: token, email: email }
-
         const action$ = m.hot("-^-a-", {
             a: createActionLoginRequested(),
         })
         const expected = m.hot("--b-", {
-            b: createActionLoginAuthorized(auth),
+            b: createActionLoginAuthorized(authFixture),
         })
 
         getFormValues.mockImplementation(formName =>
             (formName === "login"
                 ? ((state) => ({
-                    email: email,
+                    email: emailFixture,
                 }))
                 : undefined))
 
-        const headers = { "Content-Type": "application/json" }
-        getHttpHeaders.mockImplementation(state => headers)
-        logIn.mockImplementation((eMail, h) => [token])
+        getHttpHeaders.mockImplementation(state => headersFixture)
+        logIn.mockImplementation((eMail, h) => [tokenFixture])
 
         const result = logInEpic(new ActionsObservable(action$), epicDeps)
         m.expect(result).toBeObservable(expected)
     }))
 })
 
+describe("logInSubmit", () => {
+    it("should submit", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionLoginRequested(),
+        })
+        const expected = m.hot("--b-", {
+            b: startSubmit("login"),
+        })
+
+        const result = logInSubmit(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+    }))
+})
+
+describe("loginAuthorizedSaveAuth", () => {
+    it("should submit", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionLoginAuthorized(authFixture),
+        })
+        const expected = m.hot("----")
+
+        const localStorage = {
+            setItem: jest.fn(() => {}),
+        }
+
+        const epic = loginAuthorizedSaveAuth(localStorage)
+        const result = epic(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+
+        return Promise.resolve().then(() => {
+            expect(localStorage.setItem)
+                .toHaveBeenCalledWith("auth", JSON.stringify(authFixture))
+        })
+    }))
+})
+
+describe("signUpEpic", () => {
+    it("should signup", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionSignupRequested(),
+        })
+        const expected = m.hot("--b-", {
+            b: createActionSignupSuccess(user),
+        })
+
+        getFormValues.mockImplementation(formName =>
+            (formName === "login"
+                ? ((state) => ({
+                    email: emailFixture,
+                    name: nameFixture,
+                }))
+                : undefined))
+
+        registerUser.mockImplementation(() => [userDTO])
+
+        const epic = signUpEpic
+        const result = epic(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+
+        return Promise.resolve().then(() => {
+            expect(getFormValues)
+                .toHaveBeenCalledWith("login")
+        })
+    }))
+})
+
+describe("signUpSync", () => {
+    it("should submit", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionSignupSuccess(user),
+        })
+        const expected = m.hot("--b-", {
+            b: createActionUserUpdate(user),
+        })
+
+        const result = signUpSync(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+    }))
+})
+
+describe("loginAuthorizedDownloadData", () => {
+    it("should submit", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionLoginAuthorized(),
+        })
+        const expected = m.hot("--b-", {
+            b: createActionSyncStart(),
+        })
+
+        const result = loginAuthorizedDownloadData(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+    }))
+})
+
+describe("signUpSuccessNotify", () => {
+    it("should submit", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionSignupSuccess(),
+        })
+        const expected = m.hot("--b-", {
+            b: createActionShowSuccess("Successfully signed up, you can log in now."),
+        })
+
+        const result = signUpSuccessNotify(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+    }))
+})

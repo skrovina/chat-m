@@ -6,7 +6,7 @@ import { Menu } from "antd"
 import { getUserChannelsSorted } from "../../selectors/channels"
 import type { Channel } from "../../types"
 import { createActionChannelsSelect } from "../../actions/channels/channels"
-import { getActiveChannelId } from "../../selectors/activeChannel"
+import { getActiveChannelId } from "../../selectors/activeChannelSelectors"
 
 type ChannelListProps = {|
     channels: Channel[],

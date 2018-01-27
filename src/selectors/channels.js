@@ -6,7 +6,6 @@ import type { Channel } from "../types"
 import type { ChannelsStateObject } from "../reducers/channels"
 import { getSignedInUserEmail } from "./users"
 import { fromAssoc } from "../utils/collections"
-import { getActiveChannelId } from "./activeChannel"
 
 export const getAllChannelsObject = (state: StateObject): ChannelsStateObject =>
     state.channels
@@ -32,11 +31,4 @@ export const getUserChannelsSorted: (StateObject) => Channel[] = createSelector(
         }
         return 0
     })
-)
-
-export const getActiveChannel: (StateObject) => ?Channel = createSelector(
-    getActiveChannelId,
-    getAllChannelsObject,
-    (activeChannelId: ?string, allChannels: ChannelsStateObject) =>
-        activeChannelId && allChannels[activeChannelId],
 )

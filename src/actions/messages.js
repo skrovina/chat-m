@@ -93,7 +93,7 @@ export const createActionMessageAdjustVotesSuccess = (channelId: string, message
 })
 
 export const EDIT_MESSAGE_SUBMIT = "message/edit/submit"
-export const createActioEditMessageSubmit = (messageId: string) => ({
+export const createActionEditMessageSubmit = (messageId: string) => ({
     type: EDIT_MESSAGE_SUBMIT,
     payload: {
         messageId: messageId,

@@ -13,10 +13,10 @@ import { deleteChannel } from "../../api/httpRequests"
 import type { Channel, ChannelDTO } from "../../types"
 import { channelDTOToChannel, channelToChannelDTO } from "../../modelTransform/channel"
 import { toAssoc } from "../../utils/collections"
-import { getActiveChannel } from "../../selectors/channels"
+import { getActiveChannel } from "../../selectors/activeChannelSelectors"
 
 
-const submit = (action$: Object, deps: EpicDeps) =>
+export const submit = (action$: Object, deps: EpicDeps) =>
     action$.ofType(DELETE_CHANNEL_SUBMIT)
         .map(() => {
             const channel: ?Channel = getActiveChannel(deps.getState())
@@ -27,7 +27,7 @@ const submit = (action$: Object, deps: EpicDeps) =>
             return createActionDeleteChannelPost(channel)
         })
 
-const post = (action$: Object, deps: EpicDeps) =>
+export const post = (action$: Object, deps: EpicDeps) =>
     action$.ofType(DELETE_CHANNEL_POST)
         .concatMap((action) => {
             const headers = getHttpHeaders(deps.getState())
@@ -43,7 +43,7 @@ const post = (action$: Object, deps: EpicDeps) =>
             return []
         })
 
-const postSuccessSync = (action$: Object, deps: EpicDeps) =>
+export const postSuccessSync = (action$: Object, deps: EpicDeps) =>
     action$.ofType(DELETE_CHANNEL_POST_SUCCESS)
         .map((action) => {
             const channels: ChannelDTO[] = action.payload.channels
@@ -54,9 +54,9 @@ const postSuccessSync = (action$: Object, deps: EpicDeps) =>
             ))
         })
 
-const postSuccessCloseModal = (action$: Object, deps: EpicDeps) =>
+export const postSuccessCloseModal = (action$: Object, deps: EpicDeps) =>
     action$.ofType(DELETE_CHANNEL_POST_SUCCESS)
-        .map((action) => createActionModalDismiss())
+        .mapTo(createActionModalDismiss())
 
 
 export default [

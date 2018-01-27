@@ -7,7 +7,7 @@ import { Button, Form, Modal } from "antd"
 import { FormInput } from "./FormInput"
 import { createActionModalDismiss } from "../../actions/channels/addChannel"
 import { createActionRenameChannelSubmit } from "../../actions/channels/channels"
-import { getActiveChannel } from "../../selectors/channels"
+import { getActiveChannel } from "../../selectors/activeChannelSelectors"
 
 
 class RenameChannelC extends React.Component<*> {

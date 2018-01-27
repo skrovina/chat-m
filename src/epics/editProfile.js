@@ -3,7 +3,10 @@
 import Rx from "rxjs"
 import { getFormValues } from "redux-form"
 import {
-    createActionEditProfilePost, createActionEditProfilePostSuccess, EDIT_PROFILE_POST, EDIT_PROFILE_POST_SUCCESS,
+    createActionEditProfilePost,
+    createActionEditProfilePostSuccess,
+    EDIT_PROFILE_POST,
+    EDIT_PROFILE_POST_SUCCESS,
     EDIT_PROFILE_SUBMIT,
 } from "../actions/profile"
 import { updateUserProfile } from "../utils/entityFunctions"
@@ -17,7 +20,7 @@ import type { User, UserDTO } from "../types"
 import { updateUser } from "../api/httpRequests"
 
 
-const submit = (action$: Object, deps: EpicDeps) =>
+export const submit = (action$: Object, deps: EpicDeps) =>
     action$.ofType(EDIT_PROFILE_SUBMIT)
         .map(() => {
             const { name, avatar } = getFormValues("edit-profile")(deps.getState())
@@ -33,7 +36,7 @@ const submit = (action$: Object, deps: EpicDeps) =>
             return createActionEditProfilePost(updated)
         })
 
-const post = (action$: Object, deps: EpicDeps) =>
+export const post = (action$: Object, deps: EpicDeps) =>
     action$.ofType(EDIT_PROFILE_POST)
         .concatMap((action) => {
             const headers = getHttpHeaders(deps.getState())
@@ -49,7 +52,7 @@ const post = (action$: Object, deps: EpicDeps) =>
             return []
         })
 
-const postSuccessSync = (action$: Object, deps: EpicDeps) =>
+export const postSuccessSync = (action$: Object, deps: EpicDeps) =>
     action$.ofType(EDIT_PROFILE_POST_SUCCESS)
         .map((action) => {
             const user: User = userDTOToUser(action.payload.user)
@@ -57,7 +60,7 @@ const postSuccessSync = (action$: Object, deps: EpicDeps) =>
             return createActionUserUpdate(user)
         })
 
-const postSuccessCloseModal = (action$: Object, deps: EpicDeps) =>
+export const postSuccessCloseModal = (action$: Object, deps: EpicDeps) =>
     action$.ofType(EDIT_PROFILE_POST_SUCCESS)
         .map((action) => createActionModalDismiss())
 

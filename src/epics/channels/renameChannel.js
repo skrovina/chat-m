@@ -18,11 +18,11 @@ import { updateChannel } from "../../api/httpRequests"
 import type { Channel, ChannelDTO } from "../../types"
 import { channelDTOToChannel, channelToChannelDTO } from "../../modelTransform/channel"
 import { toAssoc } from "../../utils/collections"
-import { getActiveChannel } from "../../selectors/channels"
+import { getActiveChannel } from "../../selectors/activeChannelSelectors"
 import { renameChannel } from "../../utils/entityFunctions"
 
 
-const submit = (action$: Object, deps: EpicDeps) =>
+export const submit = (action$: Object, deps: EpicDeps) =>
     action$.ofType(RENAME_CHANNEL_SUBMIT)
         .map(() => {
             const { name } = getFormValues("rename-channel")(deps.getState())
@@ -37,7 +37,7 @@ const submit = (action$: Object, deps: EpicDeps) =>
             return createActionRenameChannelPost(renameChannel(channel, name))
         })
 
-const post = (action$: Object, deps: EpicDeps) =>
+export const post = (action$: Object, deps: EpicDeps) =>
     action$.ofType(RENAME_CHANNEL_POST)
         .concatMap((action) => {
             const headers = getHttpHeaders(deps.getState())
@@ -53,7 +53,7 @@ const post = (action$: Object, deps: EpicDeps) =>
             return []
         })
 
-const postSuccessSync = (action$: Object, deps: EpicDeps) =>
+export const postSuccessSync = (action$: Object, deps: EpicDeps) =>
     action$.ofType(RENAME_CHANNEL_POST_SUCCESS)
         .map((action) => {
             const channels: ChannelDTO[] = action.payload.channels
@@ -64,7 +64,7 @@ const postSuccessSync = (action$: Object, deps: EpicDeps) =>
             ))
         })
 
-const postSuccessCloseModal = (action$: Object, deps: EpicDeps) =>
+export const postSuccessCloseModal = (action$: Object, deps: EpicDeps) =>
     action$.ofType(RENAME_CHANNEL_POST_SUCCESS)
         .map((action) => createActionModalDismiss())
 

@@ -7,7 +7,7 @@ import { Button, Dropdown, Input, Menu } from "antd"
 import styled from "styled-components"
 import { Header } from "../Header"
 import { createActionMessageSearchTextChanged } from "../../actions/messages"
-import { getActiveChannel } from "../../selectors/channels"
+import { getActiveChannel } from "../../selectors/activeChannelSelectors"
 import type { Channel } from "../../types"
 
 type ChannelHeaderProps = {|

@@ -4,7 +4,7 @@ import { createActionShowNotification, SHOW_NOTIFICATION } from "../actions/noti
 import type { EpicDeps } from "../utils/configureEpics"
 
 
-const resetError = (action$: Object, deps: EpicDeps) =>
+export const resetError = (action$: Object, deps: EpicDeps) =>
     action$.ofType(SHOW_NOTIFICATION)
         .concatMap(({ payload: { notification } }) =>
             (notification !== null

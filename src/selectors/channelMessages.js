@@ -2,7 +2,7 @@
 
 import { createSelector } from "reselect"
 import { find } from "ramda"
-import { getActiveChannelId, getSearchText } from "./activeChannel"
+import { getActiveChannelId, getSearchText } from "./activeChannelSelectors"
 import type { StateObject } from "../reducers/app"
 import type { ChannelMessagesStateObject } from "../reducers/channelMessages"
 import type { Message } from "../types"

@@ -1,8 +1,12 @@
 // @flow
 
+import { createSelector } from "reselect"
 import type { ActiveChannelStateObject } from "../reducers/activeChannel"
 import type { StateObject } from "../reducers/app"
-import { getUserChannelsSorted } from "./channels"
+import { getAllChannelsObject, getUserChannelsSorted } from "./channels"
+import type { Channel } from "../types"
+import type { ChannelsStateObject } from "../reducers/channels"
+
 
 export const getActiveChannelState = (state: StateObject): ActiveChannelStateObject => state.activeChannel
 
@@ -23,3 +27,10 @@ export const getNewMessageTextValid = (state: StateObject): boolean =>
 
 export const getSearchText = (state: StateObject): string =>
     getActiveChannelState(state).messageSearchText
+
+export const getActiveChannel: (StateObject) => ?Channel = createSelector(
+    getActiveChannelId,
+    getAllChannelsObject,
+    (activeChannelId: ?string, allChannels: ChannelsStateObject) =>
+        activeChannelId && allChannels[activeChannelId],
+)
