@@ -23,7 +23,7 @@ export const syncStart = (action$: Object, deps: EpicDeps) =>
     action$.ofType(APP_LOADED)
         .map(() => createActionSyncStart())
 
-export const syncFire = (period: number = sycPeriod, scheduler: Rx.Scheduler = null) =>
+export const syncFire = (period: number = sycPeriod, scheduler: Rx.Scheduler = undefined) =>
     (action$: Object, deps: EpicDeps) =>
         action$.ofType(SYNC_START)
         // Synchronize every 10 seconds

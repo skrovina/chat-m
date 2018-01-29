@@ -10,6 +10,7 @@ import { channelsReducer } from "./channels"
 import { activeChannelReducer } from "./activeChannel"
 import { channelMessagesReducer } from "./channelMessages"
 import { notificationMessageReducer } from "./notificationMessage"
+import { loadingReducer } from "./loading"
 import type { Auth } from "../types"
 import type { UsersStateObject } from "./users"
 import type { ChannelsStateObject } from "./channels"
@@ -27,6 +28,7 @@ export type StateObject = {|
     activeChannel: ActiveChannelStateObject,
     channelMessages: ChannelMessagesStateObject,
     notification: ?NotificationMessageType,
+    loading: boolean,
 |}
 
 export const appReducer = combineReducers({
@@ -38,4 +40,5 @@ export const appReducer = combineReducers({
     activeChannel: activeChannelReducer,
     channelMessages: channelMessagesReducer,
     notification: notificationMessageReducer,
+    loading: loadingReducer,
 })

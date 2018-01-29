@@ -1,5 +1,6 @@
 /* eslint-disable function-paren-newline */
 // @flow
+
 import Rx from "rxjs"
 import { createActionShowError } from "../actions/notificationDisplay"
 import {

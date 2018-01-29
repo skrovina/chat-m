@@ -12,6 +12,7 @@ import messages from "./messages"
 import editProfile from "./editProfile"
 import errorDisplay from "./notificationDisplay"
 import error from "./error"
+import loading from "./loading"
 
 
 export const epics = [
@@ -27,4 +28,5 @@ export const epics = [
     ...editProfile,
     ...errorDisplay,
     ...error,
+    ...loading,
 ]
