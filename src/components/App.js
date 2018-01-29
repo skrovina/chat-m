@@ -49,6 +49,7 @@ class App extends React.Component<*, *> {
             }
             else if (this.hideLoading) {
                 this.hideLoading()
+                this.hideLoading = null
             }
         }
     }

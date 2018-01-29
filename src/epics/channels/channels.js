@@ -7,8 +7,10 @@ import { CHANNELS_SELECT } from "../../actions/channels/channels"
 import { getChannelMessages } from "../../api/httpRequests"
 import { getHttpHeaders } from "../../selectors/httpHeaders"
 import {
-    CHANNEL_MESSAGES_SYNC, createActionChannelMessagesReceived,
+    CHANNEL_MESSAGES_SYNC,
+    createActionChannelMessagesReceived,
     createActionChannelMessagesSync,
+    createActionChannelMessagesSyncFailure,
 } from "../../actions/messages"
 import type { MessageDTO } from "../../types"
 import { messageDTOToMessage } from "../../modelTransform/message"
@@ -33,7 +35,7 @@ export const channelMessagesSync = (action$: Object, deps: EpicDeps) =>
                 ))
                 .catch((e) => {
                     console.log(e)
-                    return []
+                    return [createActionChannelMessagesSyncFailure()]
                 }))
 
 export default [

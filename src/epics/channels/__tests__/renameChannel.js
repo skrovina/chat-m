@@ -1,5 +1,5 @@
 import { ActionsObservable } from "redux-observable"
-import "rxjs"
+import Rx from "rxjs"
 import { marbles } from "rxjs-marbles"
 
 import * as R from "ramda"
@@ -14,7 +14,7 @@ import {
 import { updateChannel } from "../../../api/httpRequests"
 import {
     createActionChannelsSync,
-    createActionRenameChannelPost,
+    createActionRenameChannelPost, createActionRenameChannelPostFailure,
     createActionRenameChannelPostSuccess,
     createActionRenameChannelSubmit,
 } from "../../../actions/channels/channels"
@@ -57,6 +57,8 @@ describe("submit", () => {
 })
 
 describe("post", () => {
+    getHttpHeaders.mockReturnValue(F.headersFixture)
+
     it("should post the submission correctly", marbles((m) => {
         const action$ = m.hot("-^-a-", {
             a: createActionRenameChannelPost(F.channel),
@@ -65,8 +67,20 @@ describe("post", () => {
             b: createActionRenameChannelPostSuccess([F.channelDTO]),
         })
 
-        getHttpHeaders.mockReturnValue(F.headersFixture)
         updateChannel.mockReturnValue([[F.channelDTO]])
+
+        const result = E.post(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+    }))
+    it("should error if request fails", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionRenameChannelPost(F.channel),
+        })
+        const expected = m.hot("--b-", {
+            b: createActionRenameChannelPostFailure(),
+        })
+
+        updateChannel.mockReturnValue(Rx.Observable.throw({}))
 
         const result = E.post(new ActionsObservable(action$), epicDeps)
         m.expect(result).toBeObservable(expected)

@@ -43,6 +43,11 @@ export const createActionChannelMessagesSync = (channelId: string) => ({
     },
 })
 
+export const CHANNEL_MESSAGES_SYNC_FAILURE = "channel/messages/sync/failure"
+export const createActionChannelMessagesSyncFailure = () => ({
+    type: CHANNEL_MESSAGES_SYNC_FAILURE,
+})
+
 export const MESSAGE_SEARCH_TEXT_CHANGED = "messages/search/textChanged"
 export const createActionMessageSearchTextChanged = (text: string) => ({
     type: MESSAGE_SEARCH_TEXT_CHANGED,

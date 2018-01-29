@@ -1,5 +1,5 @@
 import { ActionsObservable } from "redux-observable"
-import "rxjs"
+import Rx from "rxjs"
 import { marbles } from "rxjs-marbles"
 
 import * as R from "ramda"
@@ -13,7 +13,10 @@ import {
 } from "../../../actions/channels/addChannel"
 import { deleteChannel } from "../../../api/httpRequests"
 import {
-    createActionChannelsSync, createActionDeleteChannelPost, createActionDeleteChannelPostSuccess,
+    createActionChannelsSync,
+    createActionDeleteChannelPost,
+    createActionDeleteChannelPostFailure,
+    createActionDeleteChannelPostSuccess,
     createActionDeleteChannelSubmit,
 } from "../../../actions/channels/channels"
 import { getActiveChannel } from "../../../selectors/activeChannelSelectors"
@@ -46,6 +49,9 @@ describe("submit", () => {
 })
 
 describe("post", () => {
+    getHttpHeaders.mockReturnValue(F.headersFixture)
+    getSignedInUserEmail.mockReturnValue(F.user.email)
+
     it("should post the submission correctly", marbles((m) => {
         const action$ = m.hot("-^-a-", {
             a: createActionDeleteChannelPost(F.channel),
@@ -54,9 +60,20 @@ describe("post", () => {
             b: createActionDeleteChannelPostSuccess([F.channelDTO], F.channel.id),
         })
 
-        getHttpHeaders.mockReturnValue(F.headersFixture)
-        getSignedInUserEmail.mockReturnValue(F.user.email)
         deleteChannel.mockReturnValue([[F.channelDTO]])
+
+        const result = E.post(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+    }))
+    it("should error if request fails", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionDeleteChannelPost(F.channel),
+        })
+        const expected = m.hot("--b-", {
+            b: createActionDeleteChannelPostFailure(F.channel.id),
+        })
+
+        deleteChannel.mockReturnValue(Rx.Observable.throw({}))
 
         const result = E.post(new ActionsObservable(action$), epicDeps)
         m.expect(result).toBeObservable(expected)

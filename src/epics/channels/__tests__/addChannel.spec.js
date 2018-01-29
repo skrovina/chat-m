@@ -1,5 +1,5 @@
 import { ActionsObservable } from "redux-observable"
-import "rxjs"
+import Rx from "rxjs"
 import { marbles } from "rxjs-marbles"
 
 import * as R from "ramda"
@@ -10,8 +10,11 @@ import * as F from "../../../test/fixtures"
 import * as E from "../addChannel"
 import { getSignedInUserEmail } from "../../../selectors/users"
 import {
-    createActionAddChannelPost, createActionAddChannelPostSuccess,
-    createActionAddChannelSubmit, createActionModalDismiss,
+    createActionAddChannelPost,
+    createActionAddChannelPostFailure,
+    createActionAddChannelPostSuccess,
+    createActionAddChannelSubmit,
+    createActionModalDismiss,
 } from "../../../actions/channels/addChannel"
 import { addChannel } from "../../../api/httpRequests"
 import { createActionChannelsSync } from "../../../actions/channels/channels"
@@ -51,6 +54,16 @@ describe("submit", () => {
 })
 
 describe("post", () => {
+    getFormValues.mockImplementation(formName =>
+        (formName === "add-channel"
+            ? ((state) => ({
+                name: F.channel.name,
+            }))
+            : undefined))
+
+    getHttpHeaders.mockReturnValue(F.headersFixture)
+    getSignedInUserEmail.mockReturnValue(F.user.email)
+
     it("should post the submission correctly", marbles((m) => {
         const action$ = m.hot("-^-a-", {
             a: createActionAddChannelPost(F.newChannel),
@@ -58,17 +71,19 @@ describe("post", () => {
         const expected = m.hot("--b-", {
             b: createActionAddChannelPostSuccess([F.channelDTO]),
         })
-
-        getFormValues.mockImplementation(formName =>
-            (formName === "add-channel"
-                ? ((state) => ({
-                    name: F.channel.name,
-                }))
-                : undefined))
-
-        getHttpHeaders.mockReturnValue(F.headersFixture)
-        getSignedInUserEmail.mockReturnValue(F.user.email)
         addChannel.mockReturnValue([[F.channelDTO]])
+
+        const result = E.post(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+    }))
+    it("should error if request fails", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionAddChannelPost(F.newChannel),
+        })
+        const expected = m.hot("--b-", {
+            b: createActionAddChannelPostFailure(),
+        })
+        addChannel.mockReturnValue(Rx.Observable.throw({}))
 
         const result = E.post(new ActionsObservable(action$), epicDeps)
         m.expect(result).toBeObservable(expected)

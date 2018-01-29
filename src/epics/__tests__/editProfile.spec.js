@@ -1,5 +1,5 @@
 import { ActionsObservable } from "redux-observable"
-import "rxjs"
+import Rx from "rxjs"
 import { marbles } from "rxjs-marbles"
 
 import { getFormValues } from "redux-form"
@@ -8,6 +8,7 @@ import * as F from "../../test/fixtures"
 import { updateUser } from "../../api/httpRequests"
 import {
     createActionEditProfilePost,
+    createActionEditProfilePostFailure,
     createActionEditProfilePostSuccess,
     createActionEditProfileSubmit,
 } from "../../actions/profile"
@@ -57,6 +58,16 @@ describe("submit", () => {
 })
 
 describe("post", () => {
+    getFormValues.mockImplementation(formName =>
+        (formName === "edit-profile"
+            ? ((state) => ({
+                name: F.editedUser.name,
+                avatar: { base64: F.editedUser.image },
+            }))
+            : undefined))
+    getHttpHeaders.mockImplementation(state => F.headersFixture)
+    getSignedUser.mockReturnValue(F.user)
+
     it("should post submission correctly", marbles((m) => {
         const action$ = m.hot("-^-a-", {
             a: createActionEditProfilePost(F.user),
@@ -65,17 +76,20 @@ describe("post", () => {
             b: createActionEditProfilePostSuccess(F.userDTO),
         })
 
-        getFormValues.mockImplementation(formName =>
-            (formName === "edit-profile"
-                ? ((state) => ({
-                    name: F.editedUser.name,
-                    avatar: { base64: F.editedUser.image },
-                }))
-                : undefined))
-
-        getHttpHeaders.mockImplementation(state => F.headersFixture)
         updateUser.mockReturnValue([F.userDTO])
-        getSignedUser.mockReturnValue(F.user)
+
+        const result = post(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+    }))
+    it("should error if request fails", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionEditProfilePost(F.user),
+        })
+        const expected = m.hot("--b-", {
+            b: createActionEditProfilePostFailure(),
+        })
+
+        updateUser.mockReturnValue(Rx.Observable.throw({}))
 
         const result = post(new ActionsObservable(action$), epicDeps)
         m.expect(result).toBeObservable(expected)

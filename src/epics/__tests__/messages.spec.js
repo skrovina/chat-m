@@ -1,5 +1,5 @@
 import { ActionsObservable } from "redux-observable"
-import "rxjs"
+import Rx from "rxjs"
 import { marbles } from "rxjs-marbles"
 
 import { getFormValues } from "redux-form"
@@ -12,7 +12,9 @@ import {
     createActionMessageComposeSend,
     createActionMessageComposeSent,
     createActionMessageDownvote,
-    createActionMessageUpvote, createActionDeleteMessagePostSuccess,
+    createActionMessageUpvote,
+    createActionDeleteMessagePostSuccess, createActionMessageComposeSendFailure, createActionMessageAdjustVotesFailure,
+    createActionDeleteMessageSubmit, createActionDeleteMessagePostFailure, createActionEditMessagePostFailure,
 } from "../../actions/messages"
 import { getSignedInUserEmail } from "../../selectors/users"
 import {
@@ -28,7 +30,8 @@ import {
     upvotedMessageDTO,
 } from "../../test/fixtures"
 import {
-    adjustVotes, deletePostSuccessCloseModal, downvoteMessage, editMessage, editPostSuccessCloseModal, sendMessage,
+    adjustVotes, deleteMessage, deletePostSuccessCloseModal, downvoteMessage, editMessage, editPostSuccessCloseModal,
+    sendMessage,
     sentMessage,
     upvoteMessage,
 } from "../messages"
@@ -38,7 +41,7 @@ import {
 } from "../../selectors/activeChannelSelectors"
 import { getHttpHeaders } from "../../selectors/httpHeaders"
 import { createMessage } from "../../entityCreators/message"
-import { postChannelMessage, updateChannelMessage } from "../../api/httpRequests"
+import { deleteChannelMessage, postChannelMessage, updateChannelMessage } from "../../api/httpRequests"
 import { getChannelMessageById } from "../../selectors/channelMessages"
 import { createActionModalDismiss } from "../../actions/channels/addChannel"
 
@@ -56,6 +59,13 @@ const epicDeps = {
 }
 
 describe("sendMessage", () => {
+    const channelId = "channel-id-1"
+    getSignedInUserEmail.mockImplementation(() => emailFixture)
+    getActiveChannelId.mockImplementation(() => channelId)
+    getActiveChannelNewMessageText.mockImplementation(() => messageBodyFixture)
+    getHttpHeaders.mockImplementation(() => headersFixture)
+    createMessage.mockImplementation(() => message)
+
     it("should be sent successfully", marbles((m) => {
         const action$ = m.hot("-^-a-", {
             a: createActionMessageComposeSend(),
@@ -63,14 +73,26 @@ describe("sendMessage", () => {
         const expected = m.hot("--b-", {
             b: createActionChannelMessageSentSuccess("channel-id-1", message),
         })
-
-        const channelId = "channel-id-1"
-        getSignedInUserEmail.mockImplementation(() => emailFixture)
-        getActiveChannelId.mockImplementation(() => channelId)
-        getActiveChannelNewMessageText.mockImplementation(() => messageBodyFixture)
-        getHttpHeaders.mockImplementation(() => headersFixture)
-        createMessage.mockImplementation(() => message)
         postChannelMessage.mockImplementation(() => [messageDTO])
+
+        const result = sendMessage(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+
+        return Promise.resolve().then(() => {
+            expect(createMessage)
+                .toHaveBeenCalledWith(messageBodyFixture, emailFixture)
+            expect(postChannelMessage)
+                .toHaveBeenCalledWith(channelId, messageDTO, headersFixture)
+        })
+    }))
+    it("should error if request fails", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionMessageComposeSend(),
+        })
+        const expected = m.hot("--b-", {
+            b: createActionMessageComposeSendFailure(),
+        })
+        postChannelMessage.mockReturnValue(Rx.Observable.throw({}))
 
         const result = sendMessage(new ActionsObservable(action$), epicDeps)
         m.expect(result).toBeObservable(expected)
@@ -127,9 +149,11 @@ describe("downvoteMessage", () => {
 })
 
 describe("adjustVotes", () => {
-    it("should adjust votes", marbles((m) => {
-        const channelId = "channel-id-1"
+    const channelId = "channel-id-1"
+    getChannelMessageById.mockImplementation(() => [channelId, message])
+    getHttpHeaders.mockImplementation(() => headersFixture)
 
+    it("should adjust votes", marbles((m) => {
         const action$ = m.hot("-^-a-", {
             a: createActionMessageAdjustVotes(idFixture, 1),
         })
@@ -137,10 +161,20 @@ describe("adjustVotes", () => {
             b: createActionMessageAdjustVotesSuccess(channelId, upvotedMessage),
         })
 
-        getChannelMessageById.mockImplementation(() => [channelId, message])
-        getHttpHeaders.mockImplementation(() => headersFixture)
         updateChannelMessage.mockImplementation(() => [upvotedMessageDTO])
 
+        const result = adjustVotes(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+    }))
+    it("should error if request fails", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionMessageAdjustVotes(idFixture, 1),
+        })
+        const expected = m.hot("--b-", {
+            b: createActionMessageAdjustVotesFailure(),
+        })
+
+        updateChannelMessage.mockReturnValue(Rx.Observable.throw({}))
 
         const result = adjustVotes(new ActionsObservable(action$), epicDeps)
         m.expect(result).toBeObservable(expected)
@@ -148,30 +182,50 @@ describe("adjustVotes", () => {
 })
 
 describe("deleteMessage", () => {
-    it("should delete message", marbles((m) => {
-        const channelId = "channel-id-1"
+    const channelId = "channel-id-1"
+    getChannelMessageById.mockImplementation(() => [channelId, message])
+    getHttpHeaders.mockImplementation(() => headersFixture)
 
+    it("should delete message", marbles((m) => {
         const action$ = m.hot("-^-a-", {
-            a: createActionMessageAdjustVotes(idFixture, 1),
+            a: createActionDeleteMessageSubmit(message.id),
         })
         const expected = m.hot("--b-", {
-            b: createActionMessageAdjustVotesSuccess(channelId, upvotedMessage),
+            b: createActionDeleteMessagePostSuccess(channelId, message.id),
         })
 
-        getChannelMessageById.mockImplementation(() => [channelId, message])
-        getHttpHeaders.mockImplementation(() => headersFixture)
-        updateChannelMessage.mockImplementation(() => [upvotedMessageDTO])
+        deleteChannelMessage.mockImplementation(() => [upvotedMessageDTO])
 
+        const result = deleteMessage(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+    }))
+    it("should error if request fails", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionDeleteMessageSubmit(message.id),
+        })
+        const expected = m.hot("--b-", {
+            b: createActionDeleteMessagePostFailure(),
+        })
 
-        const result = adjustVotes(new ActionsObservable(action$), epicDeps)
+        deleteChannelMessage.mockReturnValue(Rx.Observable.throw({}))
+
+        const result = deleteMessage(new ActionsObservable(action$), epicDeps)
         m.expect(result).toBeObservable(expected)
     }))
 })
 
 describe("editMessage", () => {
-    it("should edit message", marbles((m) => {
-        const channelId = "channel-id-1"
+    const channelId = "channel-id-1"
+    getChannelMessageById.mockImplementation(() => [channelId, message])
+    getHttpHeaders.mockImplementation(() => headersFixture)
+    getFormValues.mockImplementation(formName =>
+        (formName === "edit-message"
+            ? ((state) => ({
+                body: editedMessage.value,
+            }))
+            : undefined))
 
+    it("should edit message", marbles((m) => {
         const action$ = m.hot("-^-a-", {
             a: createActionEditMessageSubmit("message-id-1"),
         })
@@ -179,16 +233,20 @@ describe("editMessage", () => {
             b: createActionEditMessagePostSuccess(channelId, editedMessage),
         })
 
-        getChannelMessageById.mockImplementation(() => [channelId, message])
-        getHttpHeaders.mockImplementation(() => headersFixture)
         updateChannelMessage.mockImplementation(() => [editedMessageDTO])
-        getFormValues.mockImplementation(formName =>
-            (formName === "edit-message"
-                ? ((state) => ({
-                    body: editedMessage.value,
-                }))
-                : undefined))
 
+        const result = editMessage(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+    }))
+    it("should error if request fails", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionEditMessageSubmit("message-id-1"),
+        })
+        const expected = m.hot("--b-", {
+            b: createActionEditMessagePostFailure(),
+        })
+
+        updateChannelMessage.mockReturnValue(Rx.Observable.throw({}))
 
         const result = editMessage(new ActionsObservable(action$), epicDeps)
         m.expect(result).toBeObservable(expected)

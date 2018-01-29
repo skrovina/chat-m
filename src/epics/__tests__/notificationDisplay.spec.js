@@ -22,8 +22,7 @@ describe("resetError", () => {
         const expected = m.hot("--b-", {
             b: createActionShowNotification(null),
         })
-
-
+        
         const result = resetError(new ActionsObservable(action$), epicDeps)
         m.expect(result).toBeObservable(expected)
     }))

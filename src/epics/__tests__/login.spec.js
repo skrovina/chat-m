@@ -1,11 +1,13 @@
 import { ActionsObservable } from "redux-observable"
-import "rxjs"
+import Rx from "rxjs"
 import { marbles } from "rxjs-marbles"
 
-import { getFormValues, startSubmit } from "redux-form"
+import { getFormValues, startSubmit, stopSubmit } from "redux-form"
 import {
     createActionLoginAuthorized,
+    createActionLoginErrorNotRegistered,
     createActionLoginRequested,
+    createActionSignupErrorAlreadyExists,
     createActionSignupRequested,
     createActionSignupSuccess,
 } from "../../actions/login"
@@ -43,6 +45,15 @@ const epicDeps = {
 }
 
 describe("logInEpic", () => {
+    getFormValues.mockImplementation(formName =>
+        (formName === "login"
+            ? ((state) => ({
+                email: emailFixture,
+            }))
+            : undefined))
+
+    getHttpHeaders.mockImplementation(state => headersFixture)
+
     it("should authorize correctly", marbles((m) => {
         const action$ = m.hot("-^-a-", {
             a: createActionLoginRequested(),
@@ -51,15 +62,21 @@ describe("logInEpic", () => {
             b: createActionLoginAuthorized(authFixture),
         })
 
-        getFormValues.mockImplementation(formName =>
-            (formName === "login"
-                ? ((state) => ({
-                    email: emailFixture,
-                }))
-                : undefined))
-
-        getHttpHeaders.mockImplementation(state => headersFixture)
         logIn.mockImplementation((eMail, h) => [tokenFixture])
+
+        const result = logInEpic(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+    }))
+    it("should error if request fails", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionLoginRequested(),
+        })
+        const expected = m.hot("--(cb)-", {
+            b: createActionLoginErrorNotRegistered(authFixture),
+            c: stopSubmit("login"),
+        })
+
+        logIn.mockReturnValue(Rx.Observable.throw({ status: 400 }))
 
         const result = logInEpic(new ActionsObservable(action$), epicDeps)
         m.expect(result).toBeObservable(expected)
@@ -103,6 +120,15 @@ describe("loginAuthorizedSaveAuth", () => {
 })
 
 describe("signUpEpic", () => {
+    getFormValues.mockImplementation(formName =>
+        (formName === "login"
+            ? ((state) => ({
+                email: emailFixture,
+                name: nameFixture,
+            }))
+            : undefined))
+    const epic = signUpEpic
+
     it("should signup", marbles((m) => {
         const action$ = m.hot("-^-a-", {
             a: createActionSignupRequested(),
@@ -111,17 +137,27 @@ describe("signUpEpic", () => {
             b: createActionSignupSuccess(user),
         })
 
-        getFormValues.mockImplementation(formName =>
-            (formName === "login"
-                ? ((state) => ({
-                    email: emailFixture,
-                    name: nameFixture,
-                }))
-                : undefined))
-
         registerUser.mockImplementation(() => [userDTO])
 
-        const epic = signUpEpic
+        const result = epic(new ActionsObservable(action$), epicDeps)
+        m.expect(result).toBeObservable(expected)
+
+        return Promise.resolve().then(() => {
+            expect(getFormValues)
+                .toHaveBeenCalledWith("login")
+        })
+    }))
+    it("should error signup on failure", marbles((m) => {
+        const action$ = m.hot("-^-a-", {
+            a: createActionSignupRequested(),
+        })
+        const expected = m.hot("--(cb)-", {
+            b: createActionSignupErrorAlreadyExists(user),
+            c: stopSubmit("login"),
+        })
+
+        registerUser.mockReturnValue(Rx.Observable.throw({ status: 400 }))
+
         const result = epic(new ActionsObservable(action$), epicDeps)
         m.expect(result).toBeObservable(expected)
 
