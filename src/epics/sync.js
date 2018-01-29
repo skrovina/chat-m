@@ -42,7 +42,9 @@ export const syncUsers = (action$: Object, deps: EpicDeps) =>
                     )))
                 .catch((e) => {
                     console.log(e)
-                    return [createActionLogOut()]
+                    return e.status === 403 || e.status === 401
+                        ? [createActionLogOut()]
+                        : []
                 })
         })
 
@@ -52,15 +54,17 @@ export const syncChannels = (action$: Object, deps: EpicDeps) =>
             const headers = getHttpHeaders(deps.getState())
 
             return Rx.Observable.from(getChannels(headers))
-        })
-        .map((channels: ChannelDTO[]) =>
-            createActionChannelsSync(toAssoc(
-                channels.map((c) => channelDTOToChannel(c)),
-                (c: Channel) => c.id,
-            )))
-        .catch((e) => {
-            console.log(e)
-            return [createActionLogOut()]
+                .map((channels: ChannelDTO[]) =>
+                    createActionChannelsSync(toAssoc(
+                        channels.map((c) => channelDTOToChannel(c)),
+                        (c: Channel) => c.id,
+                    )))
+                .catch((e) => {
+                    console.log(e)
+                    return e.status === 403 || e.status === 401
+                        ? [createActionLogOut()]
+                        : []
+                })
         })
 
 export const syncMessages = (action$: Object, deps: EpicDeps) =>

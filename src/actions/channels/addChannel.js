@@ -25,11 +25,3 @@ export const createActionAddChannelPostSuccess = (channels: ChannelDTO[]) => ({
         channels: channels,
     },
 })
-
-export const ADD_CHANNEL_POST_FAILURE = "addChannel/post/failure"
-export const createActionAddChannelPostFailure = (error: string) => ({
-    type: ADD_CHANNEL_POST_SUCCESS,
-    payload: {
-        error: error,
-    },
-})

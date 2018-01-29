@@ -4,8 +4,12 @@ import Rx from "rxjs"
 import { getFormValues } from "redux-form"
 import type { EpicDeps } from "../../utils/configureEpics"
 import {
-    ADD_CHANNEL_POST, ADD_CHANNEL_POST_SUCCESS, ADD_CHANNEL_SUBMIT, createActionModalDismiss,
-    createActionAddChannelPost, createActionAddChannelPostFailure, createActionAddChannelPostSuccess,
+    ADD_CHANNEL_POST,
+    ADD_CHANNEL_POST_SUCCESS,
+    ADD_CHANNEL_SUBMIT,
+    createActionModalDismiss,
+    createActionAddChannelPost,
+    createActionAddChannelPostSuccess,
 } from "../../actions/channels/addChannel"
 import { createActionChannelsSync } from "../../actions/channels/channels"
 import { createNewChannel } from "../../entityCreators/channel"
@@ -15,6 +19,7 @@ import { addChannel } from "../../api/httpRequests"
 import type { Channel, ChannelDTO, NewChannel } from "../../types"
 import { channelDTOToChannel, newChannelToNewChannelDTO } from "../../modelTransform/channel"
 import { toAssoc } from "../../utils/collections"
+import { createActionShowError } from "../../actions/notificationDisplay"
 
 
 export const submit = (action$: Object, deps: EpicDeps) =>
@@ -40,12 +45,12 @@ export const post = (action$: Object, deps: EpicDeps) =>
             const newChannelDTO = newChannelToNewChannelDTO(newChannel)
 
             return Rx.Observable.from(addChannel(newChannelDTO, headers))
-        })
-        .map((channels: ChannelDTO[]) =>
-            createActionAddChannelPostSuccess(channels))
-        .catch((e) => {
-            console.log(e)
-            return createActionAddChannelPostFailure(e)
+                .map((channels: ChannelDTO[]) =>
+                    createActionAddChannelPostSuccess(channels))
+                .catch((e) => {
+                    console.log(e)
+                    return [createActionShowError("Adding channel failed.")]
+                })
         })
 
 export const postSuccessSync = (action$: Object, deps: EpicDeps) =>

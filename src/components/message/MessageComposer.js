@@ -6,7 +6,10 @@ import { Button, Input } from "antd"
 import { connect } from "react-redux"
 import { Header } from "../Header"
 import { createActionMessageComposeSend, createActionMessageComposeTextChanged } from "../../actions/messages"
-import { getActiveChannelNewMessageText, getNewMessageTextValid } from "../../selectors/activeChannelSelectors"
+import {
+    getActiveChannelId, getActiveChannelNewMessageText,
+    getNewMessageTextValid,
+} from "../../selectors/activeChannelSelectors"
 
 const HeaderWithTopBorder = styled(Header)`
     border-top: 1px solid lightgrey;
@@ -15,6 +18,7 @@ const HeaderWithTopBorder = styled(Header)`
 type MessageComposerProps = {|
     messageText: string,
     canSend: boolean,
+    disabled: boolean,
     onTextChanged: (string) => void,
     send: () => void,
 |}
@@ -29,13 +33,14 @@ class MessageComposerC extends React.Component<*> {
             <HeaderWithTopBorder>
                 <Input
                     style={{ marginRight: 15 }}
+                    disabled={this.props.disabled}
                     onChange={this.onTextChanged}
                     onPressEnter={this.props.send}
                     placeholder={"New message…"}
                     value={this.props.messageText} />
                 <Button
                     type="primary"
-                    disabled={!this.props.canSend}
+                    disabled={!this.props.canSend || this.props.disabled}
                     onClick={this.props.send}>Send</Button>
             </HeaderWithTopBorder>
         )
@@ -45,6 +50,7 @@ class MessageComposerC extends React.Component<*> {
 const mapStateToProps = (state) => ({
     messageText: getActiveChannelNewMessageText(state),
     canSend: getNewMessageTextValid(state),
+    disabled: getActiveChannelId(state) == null,
 })
 
 const mapDispatchToProps = {

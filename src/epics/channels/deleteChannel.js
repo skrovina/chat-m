@@ -4,7 +4,10 @@ import Rx from "rxjs"
 import type { EpicDeps } from "../../utils/configureEpics"
 import { createActionModalDismiss } from "../../actions/channels/addChannel"
 import {
-    createActionChannelsSync, createActionDeleteChannelPost, createActionDeleteChannelPostSuccess, DELETE_CHANNEL_POST,
+    createActionChannelsSync,
+    createActionDeleteChannelPost,
+    createActionDeleteChannelPostSuccess,
+    DELETE_CHANNEL_POST,
     DELETE_CHANNEL_POST_SUCCESS,
     DELETE_CHANNEL_SUBMIT,
 } from "../../actions/channels/channels"
@@ -14,6 +17,7 @@ import type { Channel, ChannelDTO } from "../../types"
 import { channelDTOToChannel, channelToChannelDTO } from "../../modelTransform/channel"
 import { toAssoc } from "../../utils/collections"
 import { getActiveChannel } from "../../selectors/activeChannelSelectors"
+import { createActionShowError } from "../../actions/notificationDisplay"
 
 
 export const submit = (action$: Object, deps: EpicDeps) =>
@@ -35,12 +39,12 @@ export const post = (action$: Object, deps: EpicDeps) =>
             const channelDTO = channelToChannelDTO(channel)
 
             return Rx.Observable.from(deleteChannel(channelDTO, headers))
-        })
-        .map((channels: ChannelDTO[]) =>
-            createActionDeleteChannelPostSuccess(channels))
-        .catch((e) => {
-            console.log(e)
-            return []
+                .map((channels: ChannelDTO[]) =>
+                    createActionDeleteChannelPostSuccess(channels, channel.id))
+                .catch((e) => {
+                    console.log(e)
+                    return [createActionShowError("Deleting channel failed.")]
+                })
         })
 
 export const postSuccessSync = (action$: Object, deps: EpicDeps) =>

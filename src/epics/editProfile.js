@@ -18,6 +18,7 @@ import { createActionUserUpdate } from "../actions/users"
 import { getHttpHeaders } from "../selectors/httpHeaders"
 import type { User, UserDTO } from "../types"
 import { updateUser } from "../api/httpRequests"
+import { createActionShowError } from "../actions/notificationDisplay"
 
 
 export const submit = (action$: Object, deps: EpicDeps) =>
@@ -44,12 +45,12 @@ export const post = (action$: Object, deps: EpicDeps) =>
             const userUpdateDTO = userDTOToUserUpdateDTO(userToUserDTO(user))
 
             return Rx.Observable.from(updateUser(user.email, userUpdateDTO, headers))
-        })
-        .map((user: UserDTO) =>
-            createActionEditProfilePostSuccess(user))
-        .catch((e) => {
-            console.log(e)
-            return []
+                .map((userDTO: UserDTO) =>
+                    createActionEditProfilePostSuccess(userDTO))
+                .catch((e) => {
+                    console.log(e)
+                    return [createActionShowError("Updating user profile failed.")]
+                })
         })
 
 export const postSuccessSync = (action$: Object, deps: EpicDeps) =>
@@ -62,7 +63,7 @@ export const postSuccessSync = (action$: Object, deps: EpicDeps) =>
 
 export const postSuccessCloseModal = (action$: Object, deps: EpicDeps) =>
     action$.ofType(EDIT_PROFILE_POST_SUCCESS)
-        .map((action) => createActionModalDismiss())
+        .mapTo(createActionModalDismiss())
 
 
 export default [

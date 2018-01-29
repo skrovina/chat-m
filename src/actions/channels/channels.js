@@ -66,10 +66,11 @@ export const createActionDeleteChannelPost = (channel: Channel) => ({
 })
 
 export const DELETE_CHANNEL_POST_SUCCESS = "deleteChannel/post/success"
-export const createActionDeleteChannelPostSuccess = (channels: ChannelDTO[]) => ({
+export const createActionDeleteChannelPostSuccess = (channels: ChannelDTO[], channelId: string) => ({
     type: DELETE_CHANNEL_POST_SUCCESS,
     payload: {
         channels: channels,
+        channelId: channelId,
     },
 })
 

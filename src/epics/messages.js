@@ -22,6 +22,7 @@ import type { Message, MessageDTO } from "../types"
 import { getChannelMessageById } from "../selectors/channelMessages"
 import { adjustMessageVotes, updateMessageValue } from "../utils/entityFunctions"
 import { createActionModalDismiss } from "../actions/channels/addChannel"
+import { createActionShowError } from "../actions/notificationDisplay"
 
 
 export const sendMessage = (action$: Object, deps: EpicDeps) =>
@@ -39,17 +40,16 @@ export const sendMessage = (action$: Object, deps: EpicDeps) =>
             const headers = getHttpHeaders(deps.getState())
 
             return Rx.Observable.from(postChannelMessage(channelId, messageDTO, headers))
-                .map(m => [channelId, m])
-        })
-        .map(([channelId, messageDTO]: [string, MessageDTO]) => {
-            return createActionChannelMessageSentSuccess(
-                channelId,
-                messageDTOToMessage(messageDTO),
-            )
-        })
-        .catch((e) => {
-            console.log(e)
-            return []
+                .map((receivedMessageDTO: MessageDTO) => {
+                    return createActionChannelMessageSentSuccess(
+                        channelId,
+                        messageDTOToMessage(receivedMessageDTO),
+                    )
+                })
+                .catch((e) => {
+                    console.log(e)
+                    return [createActionShowError("Sending message failed.")]
+                })
         })
 
 export const sentMessage = (action$: Object, deps: EpicDeps) =>
@@ -81,16 +81,12 @@ export const adjustVotes = (action$: Object, deps: EpicDeps) =>
             const headers = getHttpHeaders(deps.getState())
 
             return Rx.Observable.from(updateChannelMessage(channelId, messageDTO, headers))
-                .map(m => [channelId, m])
-        })
-        .map(([channelId, messageDTO]: [string, MessageDTO]) => {
-            const message = messageDTOToMessage(messageDTO)
-
-            return createActionMessageAdjustVotesSuccess(channelId, message)
-        })
-        .catch((e) => {
-            console.log(e)
-            return []
+                .map((receivedMessageDTO: MessageDTO) =>
+                    createActionMessageAdjustVotesSuccess(channelId, messageDTOToMessage(receivedMessageDTO)))
+                .catch((e) => {
+                    console.log(e)
+                    return [createActionShowError("Adjusting votes failed.")]
+                })
         })
 
 
@@ -108,12 +104,11 @@ export const deleteMessage = (action$: Object, deps: EpicDeps) =>
 
 
             return Rx.Observable.from(deleteChannelMessage(channelId, messageId, headers))
-                .map(() => [channelId, messageId])
-        })
-        .map(([channelId, messageId]: [string, string]) => createActionDeleteMessagePostSuccess(channelId, messageId))
-        .catch((e) => {
-            console.log(e)
-            return []
+                .mapTo(createActionDeleteMessagePostSuccess(channelId, messageId))
+                .catch((e) => {
+                    console.log(e)
+                    return [createActionShowError("Deleting message failed.")]
+                })
         })
 
 export const editMessage = (action$: Object, deps: EpicDeps) =>
@@ -136,16 +131,12 @@ export const editMessage = (action$: Object, deps: EpicDeps) =>
             const messageDTO = messageToMessageDTO(updatedMessage)
 
             return Rx.Observable.from(updateChannelMessage(channelId, messageDTO, headers))
-                .map(m => [channelId, m])
-        })
-        .map(([channelId, messageDTO]: [string, MessageDTO]) => {
-            const message = messageDTOToMessage(messageDTO)
-
-            return createActionEditMessagePostSuccess(channelId, message)
-        })
-        .catch((e) => {
-            console.log(e)
-            return []
+                .map((receivedMessageDTO: MessageDTO) =>
+                    createActionEditMessagePostSuccess(channelId, messageDTOToMessage(receivedMessageDTO)))
+                .catch((e) => {
+                    console.log(e)
+                    return [createActionShowError("Editing message failed.")]
+                })
         })
 
 

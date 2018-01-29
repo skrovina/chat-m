@@ -40,12 +40,11 @@ class EditProfileC extends React.Component<*> {
                         label="Name"
                         placeholder={this.props.user && this.props.user.name}
                         component={FormInput}
-                    />
+                        onPressEnter={this.props.handleSubmit(this.props.onSubmit)} />
                     <Field
                         name="avatar"
                         label="Avatar"
-                        component={FormFileInput}
-                    />
+                        component={FormFileInput} />
                 </Form>
             </Modal>
         )

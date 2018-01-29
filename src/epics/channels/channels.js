@@ -23,19 +23,18 @@ export const channelMessagesSync = (action$: Object, deps: EpicDeps) =>
         .concatMap(({ payload: { channelId } }) =>
             Rx.Observable.from(getChannelMessages(
                 channelId,
-                getHttpHeaders(deps.getState())))
-                .map(messages => [channelId, messages]))
-        .map(([channelId, messages]: [string, MessageDTO[]]) => createActionChannelMessagesReceived(
-            channelId,
-            messages
-                .map(m => messageDTOToMessage(m))
-                .sort((m1, m2) => compareAsc(m1.created.at, m2.created.at))
-        ))
-        .catch((e) => {
-            console.log(e)
-            return []
-        })
-
+                getHttpHeaders(deps.getState()),
+            ))
+                .map((messages: MessageDTO[]) => createActionChannelMessagesReceived(
+                    channelId,
+                    messages
+                        .map(m => messageDTOToMessage(m))
+                        .sort((m1, m2) => compareAsc(m1.created.at, m2.created.at)),
+                ))
+                .catch((e) => {
+                    console.log(e)
+                    return []
+                }))
 
 export default [
     channelsSelect,

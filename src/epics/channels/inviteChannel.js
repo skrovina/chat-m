@@ -17,6 +17,7 @@ import { channelDTOToChannel, channelToChannelDTO } from "../../modelTransform/c
 import { toAssoc } from "../../utils/collections"
 import { getActiveChannel } from "../../selectors/activeChannelSelectors"
 import { addParticipatorToChannel } from "../../utils/entityFunctions"
+import { createActionShowError } from "../../actions/notificationDisplay"
 
 
 export const submit = (action$: Object, deps: EpicDeps) =>
@@ -42,12 +43,12 @@ export const post = (action$: Object, deps: EpicDeps) =>
             const channelDTO = channelToChannelDTO(channel)
 
             return Rx.Observable.from(updateChannel(channelDTO, headers))
-        })
-        .map((channels: ChannelDTO[]) =>
-            createActionInviteChannelPostSuccess(channels))
-        .catch((e) => {
-            console.log(e)
-            return []
+                .map((channels: ChannelDTO[]) =>
+                    createActionInviteChannelPostSuccess(channels))
+                .catch((e) => {
+                    console.log(e)
+                    return [createActionShowError("Inviting to channel failed")]
+                })
         })
 
 export const postSuccessSync = (action$: Object, deps: EpicDeps) =>

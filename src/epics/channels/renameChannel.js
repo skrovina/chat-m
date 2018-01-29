@@ -20,6 +20,7 @@ import { channelDTOToChannel, channelToChannelDTO } from "../../modelTransform/c
 import { toAssoc } from "../../utils/collections"
 import { getActiveChannel } from "../../selectors/activeChannelSelectors"
 import { renameChannel } from "../../utils/entityFunctions"
+import { createActionShowError } from "../../actions/notificationDisplay"
 
 
 export const submit = (action$: Object, deps: EpicDeps) =>
@@ -45,12 +46,12 @@ export const post = (action$: Object, deps: EpicDeps) =>
             const channelDTO = channelToChannelDTO(channel)
 
             return Rx.Observable.from(updateChannel(channelDTO, headers))
-        })
-        .map((channels: ChannelDTO[]) =>
-            createActionRenameChannelPostSuccess(channels))
-        .catch((e) => {
-            console.log(e)
-            return []
+                .map((channels: ChannelDTO[]) =>
+                    createActionRenameChannelPostSuccess(channels))
+                .catch((e) => {
+                    console.log(e)
+                    return [createActionShowError("Renaming channel failed")]
+                })
         })
 
 export const postSuccessSync = (action$: Object, deps: EpicDeps) =>
@@ -66,7 +67,7 @@ export const postSuccessSync = (action$: Object, deps: EpicDeps) =>
 
 export const postSuccessCloseModal = (action$: Object, deps: EpicDeps) =>
     action$.ofType(RENAME_CHANNEL_POST_SUCCESS)
-        .map((action) => createActionModalDismiss())
+        .mapTo(createActionModalDismiss())
 
 
 export default [
