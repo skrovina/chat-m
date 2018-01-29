@@ -16,6 +16,11 @@ export const createActionMessageComposeSend = () => ({
     type: MESSAGE_COMPOSE_SEND,
 })
 
+export const MESSAGE_COMPOSE_SEND_FAILURE = "message/compose/send/failure"
+export const createActionMessageComposeSendFailure = () => ({
+    type: MESSAGE_COMPOSE_SEND_FAILURE,
+})
+
 export const MESSAGE_COMPOSE_SENT = "message/compose/sent"
 export const createActionMessageComposeSent = () => ({
     type: MESSAGE_COMPOSE_SENT,
@@ -92,6 +97,11 @@ export const createActionMessageAdjustVotesSuccess = (channelId: string, message
     },
 })
 
+export const MESSAGE_ADJUST_VOTES_FAILURE = "message/adjustVotes/failure"
+export const createActionMessageAdjustVotesFailure = () => ({
+    type: MESSAGE_ADJUST_VOTES_FAILURE,
+})
+
 export const EDIT_MESSAGE_SUBMIT = "message/edit/submit"
 export const createActionEditMessageSubmit = (messageId: string) => ({
     type: EDIT_MESSAGE_SUBMIT,
@@ -109,6 +119,11 @@ export const createActionEditMessagePostSuccess = (channelId: string, message: M
     },
 })
 
+export const EDIT_MESSAGE_POST_FAILURE = "message/delete/post/failure"
+export const createActionEditMessagePostFailure = () => ({
+    type: EDIT_MESSAGE_POST_FAILURE,
+})
+
 export const DELETE_MESSAGE_SUBMIT = "message/delete/submit"
 export const createActionDeleteMessageSubmit = (messageId: string) => ({
     type: DELETE_MESSAGE_SUBMIT,
@@ -124,4 +139,9 @@ export const createActionDeleteMessagePostSuccess = (channelId: string, messageI
         channelId: channelId,
         messageId: messageId,
     },
+})
+
+export const DELETE_MESSAGE_POST_FAILURE = "message/edit/post/failure"
+export const createActionDeleteMessagePostFailure = () => ({
+    type: DELETE_MESSAGE_POST_FAILURE,
 })

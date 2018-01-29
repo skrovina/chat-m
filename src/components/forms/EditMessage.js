@@ -31,6 +31,7 @@ export const editMessageComponent = (messageId: string) => {
                     onCancel={this.props.onCancel}
                     footer={[
                         <Button
+                            key="delete"
                             type="danger"
                             onClick={this.onDelete}>
                             Delete Message
@@ -51,7 +52,8 @@ export const editMessageComponent = (messageId: string) => {
                         <Field
                             name="body"
                             label="Edit Message Body"
-                            placeholder={this.props.user && this.props.user.name}
+                            placeholder={this.props.message && this.props.message.value}
+                            onPressEnter={this.props.handleSubmit(this.onSubmit)}
                             component={FormInput} />
                     </Form>
                 </Modal>

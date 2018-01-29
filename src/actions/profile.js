@@ -22,3 +22,8 @@ export const createActionEditProfilePostSuccess = (user: UserDTO) => ({
         user: user,
     },
 })
+
+export const EDIT_PROFILE_POST_FAILURE = "editProfile/post/failure"
+export const createActionEditProfilePostFailure = () => ({
+    type: EDIT_PROFILE_POST_FAILURE,
+})

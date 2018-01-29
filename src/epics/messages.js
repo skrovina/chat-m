@@ -4,12 +4,23 @@ import Rx from "rxjs"
 import { getFormValues } from "redux-form"
 import {
     createActionEditMessagePostSuccess,
-    createActionChannelMessageSentSuccess, createActionDeleteMessagePostSuccess, createActionMessageAdjustVotes,
+    createActionChannelMessageSentSuccess,
+    createActionDeleteMessagePostSuccess,
+    createActionMessageAdjustVotes,
     createActionMessageAdjustVotesSuccess,
-    createActionMessageComposeSent, DELETE_MESSAGE_POST_SUCCESS, DELETE_MESSAGE_SUBMIT, EDIT_MESSAGE_POST_SUCCESS,
+    createActionMessageComposeSent,
+    DELETE_MESSAGE_POST_SUCCESS,
+    DELETE_MESSAGE_SUBMIT,
+    EDIT_MESSAGE_POST_SUCCESS,
     EDIT_MESSAGE_SUBMIT,
     MESSAGE_ADJUST_VOTES,
-    MESSAGE_COMPOSE_SEND, MESSAGE_DOWNVOTE, MESSAGE_UPVOTE,
+    MESSAGE_COMPOSE_SEND,
+    MESSAGE_DOWNVOTE,
+    MESSAGE_UPVOTE,
+    createActionMessageComposeSendFailure,
+    createActionMessageAdjustVotesFailure,
+    createActionDeleteMessagePostFailure,
+    createActionEditMessagePostFailure,
 } from "../actions/messages"
 import { getActiveChannelId, getActiveChannelNewMessageText } from "../selectors/activeChannelSelectors"
 import { createMessage } from "../entityCreators/message"
@@ -22,7 +33,6 @@ import type { Message, MessageDTO } from "../types"
 import { getChannelMessageById } from "../selectors/channelMessages"
 import { adjustMessageVotes, updateMessageValue } from "../utils/entityFunctions"
 import { createActionModalDismiss } from "../actions/channels/addChannel"
-import { createActionShowError } from "../actions/notificationDisplay"
 
 
 export const sendMessage = (action$: Object, deps: EpicDeps) =>
@@ -48,7 +58,7 @@ export const sendMessage = (action$: Object, deps: EpicDeps) =>
                 })
                 .catch((e) => {
                     console.log(e)
-                    return [createActionShowError("Sending message failed.")]
+                    return [createActionMessageComposeSendFailure()]
                 })
         })
 
@@ -85,7 +95,7 @@ export const adjustVotes = (action$: Object, deps: EpicDeps) =>
                     createActionMessageAdjustVotesSuccess(channelId, messageDTOToMessage(receivedMessageDTO)))
                 .catch((e) => {
                     console.log(e)
-                    return [createActionShowError("Adjusting votes failed.")]
+                    return [createActionMessageAdjustVotesFailure()]
                 })
         })
 
@@ -107,7 +117,7 @@ export const deleteMessage = (action$: Object, deps: EpicDeps) =>
                 .mapTo(createActionDeleteMessagePostSuccess(channelId, messageId))
                 .catch((e) => {
                     console.log(e)
-                    return [createActionShowError("Deleting message failed.")]
+                    return [createActionDeleteMessagePostFailure()]
                 })
         })
 
@@ -135,7 +145,7 @@ export const editMessage = (action$: Object, deps: EpicDeps) =>
                     createActionEditMessagePostSuccess(channelId, messageDTOToMessage(receivedMessageDTO)))
                 .catch((e) => {
                     console.log(e)
-                    return [createActionShowError("Editing message failed.")]
+                    return [createActionEditMessagePostFailure()]
                 })
         })
 

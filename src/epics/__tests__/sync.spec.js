@@ -13,10 +13,12 @@ import { createActionUsersSync } from "../../actions/users"
 import { createActionChannelsSync } from "../../actions/channels/channels"
 import { createActionChannelMessagesSync } from "../../actions/messages"
 import { getUserChannels } from "../../selectors/channels"
+import { getAuth } from "../../selectors/auth"
 
 jest.mock("../../api/httpRequests")
 jest.mock("../../selectors/httpHeaders")
 jest.mock("../../selectors/channels")
+jest.mock("../../selectors/auth")
 
 const epicDeps = {
     getState: () => ({}),
@@ -44,6 +46,8 @@ describe("syncFire", () => {
         const expected = m.hot("--b-b-b-(b|)", {
             b: createActionSyncFire(),
         })
+
+        getAuth.mockReturnValue(F.authFixture)
 
         const result = E.syncFire(m.time("--|"), m.scheduler)(new ActionsObservable(action$), epicDeps)
         m.expect(result.take(4)).toBeObservable(expected)

@@ -15,6 +15,7 @@ import { APP_LOADED } from "../actions/app"
 import { createActionLogOut } from "../actions/logout"
 import { getUserChannels } from "../selectors/channels"
 import { createActionChannelMessagesSync } from "../actions/messages"
+import { getAuth } from "../selectors/auth"
 
 const sycPeriod = 10000
 
@@ -27,6 +28,7 @@ export const syncFire = (period: number = sycPeriod, scheduler: Rx.Scheduler = n
         action$.ofType(SYNC_START)
         // Synchronize every 10 seconds
             .switchMap(() => Rx.Observable.timer(0, period, scheduler))
+            .filter(() => getAuth(deps.getState()) != null)
             .map(() => createActionSyncFire())
 
 export const syncUsers = (action$: Object, deps: EpicDeps) =>

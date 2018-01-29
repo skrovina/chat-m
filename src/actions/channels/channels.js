@@ -51,6 +51,10 @@ export const createActionInviteChannelPostSuccess = (channels: ChannelDTO[]) => 
     },
 })
 
+export const INVITE_CHANNEL_POST_FAILURE = "inviteChannel/post/failure"
+export const createActionInviteChannelPostFailure = () => ({
+    type: INVITE_CHANNEL_POST_FAILURE,
+})
 
 export const DELETE_CHANNEL_SUBMIT = "deleteChannel/submit"
 export const createActionDeleteChannelSubmit = () => ({
@@ -74,6 +78,14 @@ export const createActionDeleteChannelPostSuccess = (channels: ChannelDTO[], cha
     },
 })
 
+export const DELETE_CHANNEL_POST_FAILURE = "deleteChannel/post/failure"
+export const createActionDeleteChannelPostFailure = (channelId: string) => ({
+    type: DELETE_CHANNEL_POST_FAILURE,
+    payload: {
+        channelId: channelId,
+    },
+})
+
 export const RENAME_CHANNEL_SUBMIT = "renameChannel/submit"
 export const createActionRenameChannelSubmit = () => ({
     type: RENAME_CHANNEL_SUBMIT,
@@ -93,4 +105,9 @@ export const createActionRenameChannelPostSuccess = (channels: ChannelDTO[]) => 
     payload: {
         channels: channels,
     },
+})
+
+export const RENAME_CHANNEL_POST_FAILURE = "renameChannel/post/failure"
+export const createActionRenameChannelPostFailure = () => ({
+    type: RENAME_CHANNEL_POST_FAILURE,
 })

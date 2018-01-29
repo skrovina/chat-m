@@ -10,6 +10,7 @@ import {
     createActionModalDismiss,
     createActionAddChannelPost,
     createActionAddChannelPostSuccess,
+    createActionAddChannelPostFailure,
 } from "../../actions/channels/addChannel"
 import { createActionChannelsSync } from "../../actions/channels/channels"
 import { createNewChannel } from "../../entityCreators/channel"
@@ -19,7 +20,6 @@ import { addChannel } from "../../api/httpRequests"
 import type { Channel, ChannelDTO, NewChannel } from "../../types"
 import { channelDTOToChannel, newChannelToNewChannelDTO } from "../../modelTransform/channel"
 import { toAssoc } from "../../utils/collections"
-import { createActionShowError } from "../../actions/notificationDisplay"
 
 
 export const submit = (action$: Object, deps: EpicDeps) =>
@@ -49,7 +49,7 @@ export const post = (action$: Object, deps: EpicDeps) =>
                     createActionAddChannelPostSuccess(channels))
                 .catch((e) => {
                     console.log(e)
-                    return [createActionShowError("Adding channel failed.")]
+                    return [createActionAddChannelPostFailure()]
                 })
         })
 

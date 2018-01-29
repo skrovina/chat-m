@@ -51,7 +51,7 @@ describe("post", () => {
             a: createActionDeleteChannelPost(F.channel),
         })
         const expected = m.hot("--b-", {
-            b: createActionDeleteChannelPostSuccess([F.channelDTO]),
+            b: createActionDeleteChannelPostSuccess([F.channelDTO], F.channel.id),
         })
 
         getHttpHeaders.mockReturnValue(F.headersFixture)

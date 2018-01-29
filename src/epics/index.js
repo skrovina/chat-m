@@ -11,6 +11,7 @@ import deleteChannel from "./channels/deleteChannel"
 import messages from "./messages"
 import editProfile from "./editProfile"
 import errorDisplay from "./notificationDisplay"
+import error from "./error"
 
 
 export const epics = [
@@ -25,4 +26,5 @@ export const epics = [
     ...deleteChannel,
     ...editProfile,
     ...errorDisplay,
+    ...error,
 ]

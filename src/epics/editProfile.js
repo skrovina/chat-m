@@ -4,6 +4,7 @@ import Rx from "rxjs"
 import { getFormValues } from "redux-form"
 import {
     createActionEditProfilePost,
+    createActionEditProfilePostFailure,
     createActionEditProfilePostSuccess,
     EDIT_PROFILE_POST,
     EDIT_PROFILE_POST_SUCCESS,
@@ -18,7 +19,6 @@ import { createActionUserUpdate } from "../actions/users"
 import { getHttpHeaders } from "../selectors/httpHeaders"
 import type { User, UserDTO } from "../types"
 import { updateUser } from "../api/httpRequests"
-import { createActionShowError } from "../actions/notificationDisplay"
 
 
 export const submit = (action$: Object, deps: EpicDeps) =>
@@ -49,7 +49,7 @@ export const post = (action$: Object, deps: EpicDeps) =>
                     createActionEditProfilePostSuccess(userDTO))
                 .catch((e) => {
                     console.log(e)
-                    return [createActionShowError("Updating user profile failed.")]
+                    return [createActionEditProfilePostFailure()]
                 })
         })
 

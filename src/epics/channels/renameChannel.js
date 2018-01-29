@@ -8,7 +8,7 @@ import {
 } from "../../actions/channels/addChannel"
 import {
     createActionChannelsSync,
-    createActionRenameChannelPost, createActionRenameChannelPostSuccess,
+    createActionRenameChannelPost, createActionRenameChannelPostFailure, createActionRenameChannelPostSuccess,
     RENAME_CHANNEL_POST,
     RENAME_CHANNEL_POST_SUCCESS,
     RENAME_CHANNEL_SUBMIT,
@@ -20,7 +20,6 @@ import { channelDTOToChannel, channelToChannelDTO } from "../../modelTransform/c
 import { toAssoc } from "../../utils/collections"
 import { getActiveChannel } from "../../selectors/activeChannelSelectors"
 import { renameChannel } from "../../utils/entityFunctions"
-import { createActionShowError } from "../../actions/notificationDisplay"
 
 
 export const submit = (action$: Object, deps: EpicDeps) =>
@@ -50,7 +49,7 @@ export const post = (action$: Object, deps: EpicDeps) =>
                     createActionRenameChannelPostSuccess(channels))
                 .catch((e) => {
                     console.log(e)
-                    return [createActionShowError("Renaming channel failed")]
+                    return [createActionRenameChannelPostFailure()]
                 })
         })
 

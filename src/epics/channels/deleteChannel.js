@@ -6,6 +6,7 @@ import { createActionModalDismiss } from "../../actions/channels/addChannel"
 import {
     createActionChannelsSync,
     createActionDeleteChannelPost,
+    createActionDeleteChannelPostFailure,
     createActionDeleteChannelPostSuccess,
     DELETE_CHANNEL_POST,
     DELETE_CHANNEL_POST_SUCCESS,
@@ -17,7 +18,6 @@ import type { Channel, ChannelDTO } from "../../types"
 import { channelDTOToChannel, channelToChannelDTO } from "../../modelTransform/channel"
 import { toAssoc } from "../../utils/collections"
 import { getActiveChannel } from "../../selectors/activeChannelSelectors"
-import { createActionShowError } from "../../actions/notificationDisplay"
 
 
 export const submit = (action$: Object, deps: EpicDeps) =>
@@ -43,7 +43,7 @@ export const post = (action$: Object, deps: EpicDeps) =>
                     createActionDeleteChannelPostSuccess(channels, channel.id))
                 .catch((e) => {
                     console.log(e)
-                    return [createActionShowError("Deleting channel failed.")]
+                    return [createActionDeleteChannelPostFailure(channel.id)]
                 })
         })
 
