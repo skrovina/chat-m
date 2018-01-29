@@ -1,14 +1,12 @@
 // @flow
 
 import { createSelector } from "reselect"
-import type { ActiveChannelStateObject } from "../reducers/activeChannel"
 import type { StateObject } from "../reducers/app"
-import { getAllChannelsObject, getUserChannelsSorted } from "./channels"
+import { getUserChannelsSorted } from "./channels"
 import type { Channel } from "../types"
 import type { ChannelsStateObject } from "../reducers/channels"
+import { getActiveChannelState, getAllChannelsObject } from "./index"
 
-
-export const getActiveChannelState = (state: StateObject): ActiveChannelStateObject => state.activeChannel
 
 export const getActiveChannelId = (state: StateObject): ?string => getActiveChannelState(state).channelId ||
     // let

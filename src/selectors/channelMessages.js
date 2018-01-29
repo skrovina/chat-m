@@ -4,12 +4,9 @@ import { createSelector } from "reselect"
 import { find } from "ramda"
 import { getActiveChannelId, getSearchText } from "./activeChannelSelectors"
 import type { StateObject } from "../reducers/app"
-import type { ChannelMessagesStateObject } from "../reducers/channelMessages"
 import type { Message } from "../types"
 import { fromAssocTuples } from "../utils/collections"
-
-
-export const getChannelMessagesState = (state: StateObject): ChannelMessagesStateObject => state.channelMessages
+import { getChannelMessagesState } from "./index"
 
 export const getChannelMessageById = (id: string, state: StateObject): ?[string, Message] =>
     fromAssocTuples(getChannelMessagesState(state))

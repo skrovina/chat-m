@@ -1,5 +1,4 @@
 import { createNewChannel } from "../entityCreators/channel"
-import { createMessage } from "../entityCreators/message"
 import { uuid } from "../utils/uuidGenerator"
 import { getIsoDate } from "../utils/clock"
 import { createUser } from "../entityCreators/user"
@@ -172,7 +171,7 @@ export const user = createUser(emailFixture, nameFixture)
 export const editedUser = {
     ...user,
     name: "Fero Mrkvicka",
-    image: "base64 encoded avataris"
+    image: "base64 encoded avataris",
 }
 export const userDTO = {
     email: "email@example.com",

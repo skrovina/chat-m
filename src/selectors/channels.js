@@ -6,9 +6,8 @@ import type { Channel } from "../types"
 import type { ChannelsStateObject } from "../reducers/channels"
 import { getSignedInUserEmail } from "./users"
 import { fromAssoc } from "../utils/collections"
+import { getAllChannelsObject } from "./index"
 
-export const getAllChannelsObject = (state: StateObject): ChannelsStateObject =>
-    state.channels
 
 export const getUserChannels: (StateObject) => Channel[] = createSelector(
     getSignedInUserEmail,

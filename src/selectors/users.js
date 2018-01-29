@@ -5,6 +5,7 @@ import type { StateObject } from "../reducers/app"
 import type { User } from "../types"
 import { getAuth } from "./auth"
 import type { UsersStateObject } from "../reducers/users"
+import { getUsersStateObject } from "./index"
 
 export const getSignedInUserEmail = (state: StateObject): ?string =>
     // let
@@ -13,7 +14,7 @@ export const getSignedInUserEmail = (state: StateObject): ?string =>
         (auth ? auth.email : null)
     )()
 
-export const getAllUsers = (state: StateObject): UsersStateObject => state.users
+export const getAllUsers = (state: StateObject): UsersStateObject => getUsersStateObject(state)
 
 export const getSignedUser: (StateObject) => ?User = createSelector(
     getSignedInUserEmail,
